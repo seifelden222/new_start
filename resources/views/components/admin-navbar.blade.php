@@ -8,7 +8,7 @@
         'addcase' => 'إضافة حالة جديدة',
         'casemanage' => 'إدارة الحالات',
         'orders' => 'طلبات التبرع',
-        'doners' => 'قائمة المتبرعين',
+        'donors' => 'قائمة المتبرعين',
         'reports' => 'التقارير',
     ];
     $currentRouteName = request()->route()?->getName();

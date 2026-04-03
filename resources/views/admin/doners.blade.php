@@ -384,7 +384,7 @@
 
     function logout() {
         if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-            window.location.href = '{{ route("logout") }}';
+            document.getElementById('logout-form').submit();
         }
     }
 
@@ -621,3 +621,6 @@
         console.log('✅ جميع دوال المتبرعين تم تحميلها بنجاح');
     });
 </script>
+<form id="logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
+    @csrf
+</form>

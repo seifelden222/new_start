@@ -3,7 +3,7 @@
         ['route' => 'admindashboard', 'path' => 'admindashboard', 'icon' => 'dashboard', 'label' => 'نظرة عامة'],
         ['route' => 'casemanage', 'path' => 'casemanage', 'icon' => 'folder_shared', 'label' => 'إدارة الحالات'],
         ['route' => 'orders', 'path' => 'orders', 'icon' => 'volunteer_activism', 'label' => 'طلبات التبرع'],
-        ['route' => 'doners', 'path' => 'doners', 'icon' => 'group', 'label' => 'قائمة المتبرعين'],
+        ['route' => 'donors', 'path' => 'admin/donors', 'icon' => 'group', 'label' => 'قائمة المتبرعين'],
         ['route' => 'reports', 'path' => 'reports', 'icon' => 'assessment', 'label' => 'التقارير'],
     ];
     $user = auth()->user();

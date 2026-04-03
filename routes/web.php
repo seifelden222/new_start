@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -8,7 +9,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    /** @var \App\Models\User $user */
+    /** @var User $user */
     $user = request()->user();
 
     return redirect()->route($user->dashboardRouteName());
@@ -33,7 +34,6 @@ Route::view('/case4', 'case4')->name('case4');
 Route::view('/case5', 'case5')->name('case5');
 Route::view('/case6', 'case6')->name('case6');
 
-
 // user routes
 Route::middleware('auth')->group(function () {
     Route::view('/userdashboard', 'user.userdashboard')->name('userdashboard');
@@ -46,9 +46,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::view('/admindashboard', 'admin.admindashboard')->name('admindashboard');
     Route::view('/addcase', 'admin.addcase')->name('addcase');
     Route::view('/casemanage', 'admin.casemanage')->name('casemanage');
-    Route::view('/doners', 'admin.doners')->name('doners');
+    Route::redirect('/doners', '/admin/donors');
+    Route::view('/donors', 'admin.doners')->name('donors');
     Route::view('/orders', 'admin.orders')->name('orders');
     Route::view('/reports', 'admin.reports')->name('reports');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

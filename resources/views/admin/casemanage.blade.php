@@ -376,7 +376,7 @@
 
         function logout() {
             if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-                window.location.href = '{{ route("login") }}';
+                document.getElementById('logout-form').submit();
             }
         }
 
@@ -615,6 +615,9 @@
             }
         }
     </script>
+    <form id="logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
+        @csrf
+    </form>
 </body>
 
 </html>

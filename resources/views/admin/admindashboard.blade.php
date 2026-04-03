@@ -241,7 +241,7 @@
 
         function logout() {
             if (confirm('يا مي محمد، هل تودين تسجيل الخروج؟')) {
-                window.location.href = '{{ route("login") }}';
+                document.getElementById('logout-form').submit();
             }
         }
 
@@ -375,6 +375,9 @@
             });
         }
     </script>
+    <form id="logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
+        @csrf
+    </form>
 </body>
 
 </html>
