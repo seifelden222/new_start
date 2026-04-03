@@ -64,7 +64,7 @@
             <div class="p-4 space-y-4">
                 <div class="flex flex-col sm:flex-row gap-3 items-center justify-between flex-wrap">
                     <div class="flex gap-3">
-                        <a href="addcase.html" class="px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-blue-600 transition-colors shadow-sm flex items-center gap-2">
+                        <a href="{{ route('addcase') }}" class="px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-blue-600 transition-colors shadow-sm flex items-center gap-2">
                             <span class="material-symbols-outlined">add_circle</span>
                             إضافة حالة جديدة
                         </a>
@@ -376,7 +376,7 @@
 
         function logout() {
             if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-                window.location.href = '../login.html';
+                window.location.href = '{{ route("login") }}';
             }
         }
 
@@ -444,7 +444,7 @@
         // Edit case with navigation
         function editCase(id) {
             if (confirm(`هل تريد تعديل الحالة ${id}؟`)) {
-                window.location.href = 'addcase.html?id=' + id + '&mode=edit';
+                window.location.href = '{{ route("addcase") }}?id=' + id + '&mode=edit';
             }
         }
 

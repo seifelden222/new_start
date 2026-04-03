@@ -241,7 +241,7 @@
 
         function logout() {
             if (confirm('يا مي محمد، هل تودين تسجيل الخروج؟')) {
-                window.location.href = '../login.html';
+                window.location.href = '{{ route("login") }}';
             }
         }
 
@@ -273,15 +273,15 @@
 
         // Quick actions
         function quickAddCase() {
-            window.location.href = 'addcase.html';
+            window.location.href = '{{ route("addcase") }}';
         }
 
         function quickViewReports() {
-            window.location.href = 'reports.html';
+            window.location.href = '{{ route("reports") }}';
         }
 
         function quickManageDonors() {
-            window.location.href = 'doners.html';
+            window.location.href = '{{ route("donors") }}';
         }
 
         window.onload = function() {

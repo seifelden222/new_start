@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html dir="rtl" lang="ar">
 
 <head>
@@ -411,7 +411,7 @@
 
     function logout() {
         if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-            window.location.href = '../login.html';
+            window.location.href = '{{route('login')}}';
         }
     }
 

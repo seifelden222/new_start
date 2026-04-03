@@ -317,7 +317,7 @@
                         popup: 'rounded-[2rem] italic font-bold'
                     }
                 }).then(() => {
-                    window.location.href = 'casemanage.html';
+                    window.location.href = '{{route('casemanage')}}';
                 });
             });
         }
@@ -346,7 +346,7 @@
 
         function logout() {
             if (confirm('يا مي محمد، هل تودين تسجيل الخروج؟')) {
-                window.location.href = '../login.html';
+                window.location.href = '{{ route("login") }}';
             }
         }
     </script>
