@@ -55,7 +55,7 @@
     $userEmail = old('email', $user?->email ?? '');
     $userAddress = old('address', $user?->address ?? '');
     $userLevel = $user?->isAdmin() ? 'مدير النظام' : 'مستخدم مسجل';
-    $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName ?: 'User') . '&background=007bff&color=fff';
+    $avatarUrl = $user?->avatarUrl() ?? 'https://ui-avatars.com/api/?name=' . urlencode($userName ?: 'User') . '&background=007bff&color=fff';
 @endphp
 
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
@@ -75,7 +75,15 @@
                     <h2 class="text-3xl font-black mb-2 text-primary">إعدادات الملف الشخصي</h2>
                     <p class="text-slate-500 dark:text-slate-400 mb-10">إدارة معلومات حسابك الشخصية، تفضيلات الإشعارات وإعدادات الخصوصية</p>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    @if (session('status') === 'profile-updated')
+                        <div class="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-bold text-emerald-700">
+                            تم حفظ التغييرات بنجاح.
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                        @csrf
+                        @method('PATCH')
 
                         <div class="lg:col-span-2 space-y-10">
 
@@ -84,15 +92,24 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">الاسم الكامل</label>
-                                        <input type="text" value="{{ $userName }}" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                                        <input type="text" name="name" value="{{ $userName }}" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                                        @error('name')
+                                            <p class="mt-2 text-sm font-bold text-red-500">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">البريد الإلكتروني</label>
-                                        <input type="email" value="{{ $userEmail }}" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                                        <input type="email" name="email" value="{{ $userEmail }}" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                                        @error('email')
+                                            <p class="mt-2 text-sm font-bold text-red-500">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">العنوان</label>
-                                        <input type="text" value="{{ $userAddress }}" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                                        <input type="text" name="address" value="{{ $userAddress }}" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+                                        @error('address')
+                                            <p class="mt-2 text-sm font-bold text-red-500">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">مستوى المتبرع</label>
@@ -107,14 +124,17 @@
                                 <h3 class="text-xl font-bold border-b border-slate-200 dark:border-slate-700 pb-3">صورة الملف الشخصي</h3>
                                 <div class="flex items-center gap-6">
                                     <div class="relative h-28 w-28 rounded-full overflow-hidden border-4 border-primary/30">
-                                        <img src="{{ $avatarUrl }}" alt="{{ $userName }}" class="w-full h-full object-cover">
+                                        <img id="profileAvatarPreview" src="{{ $avatarUrl }}" alt="{{ $userName }}" class="w-full h-full object-cover">
                                     </div>
                                     <div>
-                                        <button onclick="changeProfilePicture()" class="px-6 py-2.5 bg-primary text-white rounded-lg font-medium hover:bg-blue-600 transition-colors mb-3 block">
+                                        <button type="button" onclick="changeProfilePicture()" class="px-6 py-2.5 bg-primary text-white rounded-lg font-medium hover:bg-blue-600 transition-colors mb-3 block">
                                             تغيير الصورة
                                         </button>
-                                        <input type="file" id="profileImageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                                        <p class="text-sm text-slate-500">الصيغ المسموح بها: JPG, PNG - الحد الأقصى 2 ميجابايت</p>
+                                        <input type="file" id="profileImageInput" name="profile_photo" accept="image/png,image/jpeg,image/jpg" class="hidden" onchange="handleImageUpload(event)">
+                                        <p class="text-sm text-slate-500">الصيغ المسموح بها: JPG, PNG - الحد الأقصى 2 ميجابايت. يتم حفظ الصورة بعد اختيارها مباشرة.</p>
+                                        @error('profile_photo')
+                                            <p class="mt-2 text-sm font-bold text-red-500">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -151,14 +171,12 @@
                         <div class="space-y-6 lg:sticky lg:top-24 h-fit">
                             <h3 class="text-xl font-bold border-b border-slate-200 dark:border-slate-700 pb-3">إجراءات الحساب</h3>
                             <div class="space-y-4">
-                                <button onclick="saveSettings()" class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
                                     حفظ التغييرات
                                 </button>
-                                <button onclick="cancelSettings()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 py-3 rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                                    إلغاء التعديلات
-                                </button>
+                           
                                 <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
-                                    <button onclick="deleteAccount()" class="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium flex items-center justify-center gap-2 py-2 transition-colors">
+                                    <button type="button" onclick="openDeleteAccountModal()" class="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium flex items-center justify-center gap-2 py-2 transition-colors">
                                         <span class="material-symbols-outlined">delete</span>
                                         حذف الحساب نهائياً
                                     </button>
@@ -166,12 +184,56 @@
                             </div>
                         </div>
 
-                    </div>
+                    </form>
                 </div>
 
             </div>
         </main>
 
+    </div>
+
+    <div id="deleteAccountModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm" onclick="closeDeleteAccountModal(event)">
+        <div class="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl dark:border-slate-800 dark:bg-slate-900" onclick="event.stopPropagation()">
+            <div class="mb-6 flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400">
+                    <span class="material-symbols-outlined">warning</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-black text-slate-900 dark:text-white">تأكيد حذف الحساب</h3>
+                    <p class="mt-2 text-sm font-medium leading-6 text-slate-500 dark:text-slate-400">
+                        هذا الإجراء نهائي. أدخل كلمة المرور الحالية لتأكيد حذف الحساب وكل بياناته.
+                    </p>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ route('profile.destroy') }}" class="space-y-5">
+                @csrf
+                @method('DELETE')
+
+                <div>
+                    <label for="delete_password" class="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-300">كلمة المرور الحالية</label>
+                    <input
+                        id="delete_password"
+                        name="password"
+                        type="password"
+                        placeholder="اكتب كلمة المرور لتأكيد الحذف"
+                        class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-800 outline-none transition focus:border-red-400 focus:bg-white focus:ring-4 focus:ring-red-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    >
+                    @if ($errors->userDeletion->has('password'))
+                        <p class="mt-2 text-sm font-bold text-red-500">{{ $errors->userDeletion->first('password') }}</p>
+                    @endif
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeDeleteAccountModal()" class="flex-1 rounded-2xl bg-slate-100 px-4 py-3 font-bold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="flex-1 rounded-2xl bg-red-600 px-4 py-3 font-bold text-white transition hover:bg-red-700">
+                        حذف الحساب
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Notifications Popup -->
@@ -266,39 +328,23 @@
             if (file) {
                 if (file.size > 2 * 1024 * 1024) {
                     showToast('❌ حجم الصورة يتجاوز 2 ميجابايت', 'error');
+                    event.target.value = '';
                     return;
                 }
                 if (!file.type.match('image/(jpeg|jpg|png)')) {
                     showToast('❌ الصيغة غير مدعومة. استخدم JPG أو PNG', 'error');
+                    event.target.value = '';
                     return;
                 }
 
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.querySelector('.h-28.w-28 img').src = e.target.result;
-                    showToast('✅ تم تحديث صورة الملف الشخصي', 'success');
+                    document.getElementById('profileAvatarPreview').src = e.target.result;
+                    showToast('⏳ جاري حفظ صورة الملف الشخصي...', 'info');
+                    event.target.form?.requestSubmit();
                 };
                 reader.readAsDataURL(file);
             }
-        }
-
-        // Save settings
-        function saveSettings() {
-            const name = document.querySelector('input[type="text"]').value;
-            const email = document.querySelector('input[type="email"]').value;
-            const phone = document.querySelector('input[type="tel"]').value;
-
-            if (!name || !email) {
-                showToast('❌ برجاء ملء جميع الحقول المطلوبة', 'error');
-                return;
-            }
-
-            // حفظ البيانات في localStorage
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userPhone', phone);
-
-            showToast('✅ تم حفظ التغييرات بنجاح!', 'success');
         }
 
         // Cancel settings
@@ -309,14 +355,23 @@
             }, 1000);
         }
 
-        // Delete account
-        function deleteAccount() {
-            if (confirm('⚠️ تحذير: هذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكدة من حذف حسابك نهائياً؟')) {
-                showToast('❌ تم حذف حسابك بنجاح', 'error');
-                setTimeout(() => {
-                    window.location.href = '{{ url("/"  ) }}';
-                }, 2000);
+        function openDeleteAccountModal() {
+            const modal = document.getElementById('deleteAccountModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('delete_password')?.focus();
+        }
+
+        function closeDeleteAccountModal(event) {
+            if (event && event.target !== event.currentTarget) {
+                return;
             }
+
+            const modal = document.getElementById('deleteAccountModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
         }
 
         // Toast notification
@@ -334,6 +389,16 @@
                 toast.remove();
             }, 3000);
         }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeDeleteAccountModal();
+            }
+        });
+
+        @if ($errors->userDeletion->isNotEmpty())
+            openDeleteAccountModal();
+        @endif
     </script>
 </body>
 

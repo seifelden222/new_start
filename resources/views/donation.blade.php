@@ -31,6 +31,9 @@
 </head>
 
 <body class="bg-slate-50 text-slate-900 overflow-x-hidden">
+    @php
+        $donorDisplayName = auth()->user()?->name;
+    @endphp
 
     <x-land-navbar />
 
@@ -204,7 +207,9 @@
                 return;
             }
 
-            alert("شكراً لكِ يا مي! تم تسجيل مساهمتك بنجاح 💙");
+            const donorName = @json($donorDisplayName) || name;
+
+            alert(`شكراً لك ${donorName}! تم تسجيل مساهمتك بنجاح 💙`);
         }
 
         function openMapPopup() {

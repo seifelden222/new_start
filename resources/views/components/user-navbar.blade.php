@@ -2,7 +2,7 @@
     $user = auth()->user();
     $userName = $user?->name ?? 'مستخدم المنصة';
     $userEmail = $user?->email ?? 'user@example.com';
-    $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=007bff&color=fff';
+    $avatarUrl = $user?->avatarUrl() ?? 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=007bff&color=fff';
 @endphp
 
 <header class="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-8 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
@@ -28,3 +28,56 @@
         </div>
     </div>
 </header>
+
+<style>
+    body.page-is-ready {
+        animation: dashboardFadeIn 0.3s ease-out;
+    }
+
+    body.page-is-leaving {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    @keyframes dashboardFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('page-is-ready');
+
+        document.querySelectorAll('a[href]').forEach((link) => {
+            link.addEventListener('click', (event) => {
+                const href = link.getAttribute('href');
+
+                if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.target === '_blank') {
+                    return;
+                }
+
+                const destination = new URL(href, window.location.origin);
+
+                if (destination.origin !== window.location.origin || destination.pathname === window.location.pathname) {
+                    return;
+                }
+
+                event.preventDefault();
+                document.body.classList.add('page-is-leaving');
+
+                window.setTimeout(() => {
+                    window.location.href = destination.toString();
+                }, 180);
+            });
+        });
+    });
+</script>

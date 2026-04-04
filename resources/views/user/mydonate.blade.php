@@ -50,6 +50,9 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+    @php
+        $donorName = auth()->user()?->name ?? 'مستخدم المنصة';
+    @endphp
     <div class="flex min-h-screen">
 
      
@@ -114,7 +117,7 @@
                                     <td class="px-6 py-5 text-sm font-black text-emerald-600">120.00 جنيه مصري</td>
                                     <td class="px-6 py-5 text-sm text-slate-500">فودافون كاش</td>
                                     <td class="px-6 py-5 text-center">
-                                        <button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
+                                        <button onclick="viewDonationReceipt('كبار السن - حي البساتين', '120.00', 'فودافون كاش', '14 أكتوبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
                                     </td>
                                 </tr>
 
@@ -134,7 +137,7 @@
                                     <td class="px-6 py-5 text-sm font-black text-emerald-600">300.00 جنيه مصري</td>
                                     <td class="px-6 py-5 text-sm text-slate-500">بطاقة بنكية</td>
                                     <td class="px-6 py-5 text-center">
-                                        <button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
+                                        <button onclick="viewDonationReceipt('علاج طفل طارئ', '300.00', 'بطاقة بنكية', '10 أكتوبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
                                     </td>
                                 </tr>
 
@@ -154,7 +157,7 @@
                                     <td class="px-6 py-5 text-sm font-black text-emerald-600">200.00 جنيه مصري</td>
                                     <td class="px-6 py-5 text-sm text-slate-500">إنستاباي</td>
                                     <td class="px-6 py-5 text-center">
-                                        <button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
+                                        <button onclick="viewDonationReceipt('دعم أهالي غزة - حملة الشتاء', '200.00', 'إنستاباي', '5 أكتوبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
                                     </td>
                                 </tr>
 
@@ -174,7 +177,7 @@
                                     <td class="px-6 py-5 text-sm font-black text-emerald-600">580.00 جنيه مصري</td>
                                     <td class="px-6 py-5 text-sm text-slate-500">فيزا كارد</td>
                                     <td class="px-6 py-5 text-center">
-                                        <button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
+                                        <button onclick="viewDonationReceipt('حملة قلب طفل', '580.00', 'فيزا كارد', '28 سبتمبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
                                     </td>
                                 </tr>
 
@@ -296,7 +299,7 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-sm text-slate-600 dark:text-slate-400">المتبرع</span>
-                        <span class="text-sm font-bold text-slate-900 dark:text-white">مي محمد</span>
+                        <span class="text-sm font-bold text-slate-900 dark:text-white">{{ $donorName }}</span>
                     </div>
                 </div>
                 <button onclick="downloadDonationReceipt()" class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors mb-2">

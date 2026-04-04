@@ -84,10 +84,10 @@
     <div id="toast">تم إرسال رسالتك بنجاح.. تسلم إيدك! ✉️</div>
 
     <header class="w-full bg-[#020617] text-white py-6 px-10 flex justify-between items-center shadow-2xl z-50">
-        <div class="flex items-center gap-3">
-            <img src="assets/img/logo.jpeg" alt="Logo" class="w-12 h-12 rounded-lg border border-white/20">
-            <span class="text-2xl font-black  tracking-tighter">بداية <span class="text-blue-500">جديدة</span></span>
-        </div>
+        <a href="{{ url('/') }}" class="flex items-center gap-3">
+            <img src="{{ asset('assets/img/logo.jpeg') }}" alt="Logo" class="w-12 h-12 rounded-lg border border-white/20">
+            <span class="text-2xl font-black tracking-tighter">بداية <span class="text-blue-500">جديدة</span></span>
+        </a>
         <nav class="hidden md:flex items-center gap-10">
             <a class="text-slate-300 hover:text-white font-medium transition-all relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-500 after:bottom-[-4px] after:right-0 hover:after:w-full after:transition-all" href="{{ url('/') }}">الرئيسية</a>
         </nav>
@@ -151,6 +151,7 @@
         </div>
         <div class="flex gap-10">
             <a href="{{url('privacy')}}" class="hover:text-blue-400 transition-colors">سياسة الخصوصية</a>
+            <a href="mailto:info@newbeginning.org" class="hover:text-blue-400 transition-colors">info@newbeginning.org</a>
         </div>
     </footer>
 

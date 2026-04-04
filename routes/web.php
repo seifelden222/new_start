@@ -16,9 +16,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::redirect('/profile', '/settings')->name('profile.edit');
+    Route::get('/settings', [ProfileController::class, 'edit'])->name('settings');
+    Route::patch('/settings', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/settings', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/users/{user}/avatar', [ProfileController::class, 'avatar'])->name('users.avatar');
 });
 // routes for the website pages
 Route::view('/aboutus', 'aboutus')->name('aboutus');
@@ -27,6 +29,7 @@ Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/vocationaltraining', 'vocationaltraining')->name('vocationaltraining');
 Route::view('/donation', 'donation')->name('donation');
 Route::view('/caseslist', 'caseslist')->name('caseslist');
+Route::redirect('/signup', '/register')->name('signup');
 Route::view('/case1', 'case1')->name('case1');
 Route::view('/case2', 'case2')->name('case2');
 Route::view('/case3', 'case3')->name('case3');
@@ -39,7 +42,6 @@ Route::middleware('auth')->group(function () {
     Route::view('/userdashboard', 'user.userdashboard')->name('userdashboard');
     Route::view('/mycases', 'user.mycases')->name('mycases');
     Route::view('/mydonate', 'user.mydonate')->name('mydonate');
-    Route::view('/settings', 'user.settings')->name('settings');
 });
 
 Route::middleware('auth')->prefix('admin')->group(function () {

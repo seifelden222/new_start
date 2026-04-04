@@ -83,6 +83,9 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+    @php
+        $user = auth()->user();
+    @endphp
 
     <div class="flex min-h-screen">
 
@@ -97,7 +100,7 @@
 
                 <!-- Welcome Section -->
                 <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
-                    <h2 class="text-3xl font-black mb-2 text-primary">أهلاً بكِ👋</h2>
+                    <h2 class="text-3xl font-black mb-2 text-primary">أهلاً بك {{ $user?->name ?? 'في منصة بداية جديدة' }} 👋</h2>
                     <p class="text-slate-500 dark:text-slate-400 mb-6">لوحة التحكم الخاصة بك - تابعي تبرعاتك وأثرك في المجتمع</p>
                 </div>
 

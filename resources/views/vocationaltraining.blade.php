@@ -80,8 +80,11 @@
 </head>
 
 <body class="text-slate-800">
+    @php
+        $courseRegistrantName = auth()->user()?->name;
+    @endphp
 
-    <div id="toast">تم تسجيل طلبك في الدورة بنجاح يا مي.. بالتوفيق! 🎓</div>
+    <div id="toast">تم تسجيل طلبك في الدورة بنجاح.. بالتوفيق! 🎓</div>
 
     <header class="sticky top-0 z-50 bg-[#020617]/95 backdrop-blur-md border-b border-white/5 shadow-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,10 +105,10 @@
                 </nav>
 
                 <div class="flex items-center gap-4">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95 hidden sm:flex items-center gap-2">
+                    <a href="{{ route('login') }}" class="hidden items-center gap-2 rounded-xl bg-blue-600 px-6 py-2.5 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95 sm:inline-flex">
                         <span class="material-symbols-outlined text-[20px]">volunteer_activism</span>
-                        <a href="{{ url('login') }}"> تسجيل دخول</a>
-                    </button>
+                        <span>تسجيل دخول</span>
+                    </a>
 
                     <button class="md:hidden text-white p-2">
                         <span class="material-symbols-outlined">menu</span>
@@ -249,6 +252,11 @@
     <script>
         function enroll() {
             const toast = document.getElementById("toast");
+            const registrantName = @json($courseRegistrantName);
+
+            toast.textContent = registrantName
+                ? `تم تسجيل طلبك في الدورة بنجاح يا ${registrantName}.. بالتوفيق! 🎓`
+                : 'تم تسجيل طلبك في الدورة بنجاح.. بالتوفيق! 🎓';
             toast.className = "show";
             setTimeout(() => {
                 toast.className = toast.className.replace("show", "");

@@ -42,7 +42,7 @@
                     <a class="text-slate-300 hover:text-white font-medium transition-all relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-500 after:bottom-[-4px] after:right-0 hover:after:w-full after:transition-all"
                         href="{{ url('/') }}">الرئيسية</a>
                     <a class="text-slate-300 hover:text-white font-medium transition-all relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-500 after:bottom-[-4px] after:right-0 hover:after:w-full after:transition-all"
-                        href="{{ url('cases') }}">الحالات</a>
+                        href="{{ url('caseslist') }}">الحالات</a>
                     <a class="text-slate-300 hover:text-white font-medium transition-all relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-500 after:bottom-[-4px] after:right-0 hover:after:w-full after:transition-all"
                         href="{{ url('donation') }}">خدمتنا</a>
                     <a class="text-slate-300 hover:text-white font-medium transition-all relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-500 after:bottom-[-4px] after:right-0 hover:after:w-full after:transition-all"
@@ -50,11 +50,12 @@
                 </nav>
 
                 <div class="flex items-center gap-4">
-                    <button
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95 hidden sm:flex items-center gap-2">
+                    <a
+                        href="{{ route('login') }}"
+                        class="hidden items-center gap-2 rounded-xl bg-blue-600 px-6 py-2.5 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95 sm:inline-flex">
                         <span class="material-symbols-outlined text-[20px]">volunteer_activism</span>
-                        <a href="{{ route('login') }}"> تسجيل دخول</a>
-                    </button>
+                        <span>تسجيل دخول</span>
+                    </a>
 
                     <button class="md:hidden text-white p-2">
                         <span class="material-symbols-outlined">menu</span>

@@ -68,7 +68,7 @@
 
                         <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group hover:shadow-md transition-shadow">
                             <div class="h-48 bg-slate-200 overflow-hidden relative">
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="../assets/img/Poor-family.jpg">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="../assets/img/karema.jpg">
                                 <span class="absolute top-3 right-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full font-bold">مستمر</span>
                             </div>
                             <div class="p-5">
@@ -329,10 +329,18 @@
         // View case details
         function viewCaseDetails(title, collected, target, percentage) {
             document.getElementById('caseTitle').textContent = title;
-            document.getElementById('caseCollected').textContent = collected + ' ج.م';
+            document.getElementById('caseCollected').textContent = collected.includes('جنيه') || collected.includes('شخص') ? collected : collected + ' ج.م';
             document.getElementById('caseTarget').textContent = target;
-            document.getElementById('caseProgress').style.width = percentage + '%';
-            document.getElementById('casePercentage').textContent = percentage + '%';
+            const numericPercentage = Number.parseInt(percentage, 10);
+
+            if (Number.isNaN(numericPercentage)) {
+                document.getElementById('caseProgress').style.width = '100%';
+                document.getElementById('casePercentage').textContent = percentage;
+            } else {
+                document.getElementById('caseProgress').style.width = numericPercentage + '%';
+                document.getElementById('casePercentage').textContent = numericPercentage + '%';
+            }
+
             document.getElementById('caseDetailsPopup').classList.remove('hidden');
         }
 

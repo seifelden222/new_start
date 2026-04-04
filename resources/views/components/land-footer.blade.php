@@ -15,12 +15,12 @@
                 <div class="md:col-span-3">
                     <h4 class="text-base font-bold mb-5 text-white underline decoration-blue-500 underline-offset-8">روابط سريعة</h4>
                     <ul class="space-y-3 text-sm font-bold text-slate-300">
-                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{url('/')}}">الرئيسية</a></li>
-                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{url('caseslist')}}">الحالات العاجلة</a></li>
-                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{url('aboutus')}}">من نحن</a></li>
-                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{url('contactus')}}">اتصل بنا</a></li>
-                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{url('signup')}}">انضم كمتطوع</a></li>
-                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{url('privacy')}}">سياسة الخصوصية</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ url('/') }}">الرئيسية</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('caseslist') }}">الحالات العاجلة</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('aboutus') }}">من نحن</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('contactus') }}">اتصل بنا</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('register') }}">انضم كمتطوع</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('privacy') }}">سياسة الخصوصية</a></li>
                     </ul>
                 </div>
 
@@ -35,13 +35,13 @@
                             <span class="material-symbols-outlined text-blue-400 text-lg">call</span>
                             <p dir="ltr">+20 123 456 789</p>
                         </a>
-                        <a href="contactus.html" class="flex items-center gap-3 hover:text-white transition-all">
+                        <a href="mailto:info@newbeginning.org" class="flex items-center gap-3 hover:text-white transition-all">
                             <span class="material-symbols-outlined text-blue-400 text-lg">mail</span>
                             <p>info@newbeginning.org</p>
                         </a>
 
                         <div class="pt-2">
-                            <a href="contactus.html" class="inline-flex items-center gap-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white px-4 py-2 rounded-xl text-[11px] border border-blue-600/20 transition-all">
+                            <a href="{{ route('contactus') }}" class="inline-flex items-center gap-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white px-4 py-2 rounded-xl text-[11px] border border-blue-600/20 transition-all">
                                 <span class="material-symbols-outlined text-sm font-bold">send</span>
                                 ارسل لنا رسالة مباشرة
                             </a>
@@ -55,3 +55,56 @@
             </div>
         </div>
     </footer>
+
+    <style>
+        body.page-is-ready {
+            animation: pageFadeIn 0.35s ease-out;
+        }
+
+        body.page-is-leaving {
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('page-is-ready');
+
+            document.querySelectorAll('a[href]').forEach((link) => {
+                link.addEventListener('click', (event) => {
+                    const href = link.getAttribute('href');
+
+                    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.target === '_blank') {
+                        return;
+                    }
+
+                    const destination = new URL(href, window.location.origin);
+
+                    if (destination.origin !== window.location.origin || destination.pathname === window.location.pathname) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    document.body.classList.add('page-is-leaving');
+
+                    window.setTimeout(() => {
+                        window.location.href = destination.toString();
+                    }, 180);
+                });
+            });
+        });
+    </script>
