@@ -3,6 +3,7 @@
     $navItems = [
         ['route' => null, 'label' => 'الرئيسية', 'url' => url('/')],
         ['route' => 'caseslist', 'label' => 'الحالات', 'url' => route('caseslist')],
+        ['route' => 'cases.urgent', 'label' => 'الحالات العاجلة', 'url' => route('cases.urgent')],
         ['route' => 'donation', 'label' => 'خدمتنا', 'url' => route('donation')],
         ['route' => 'aboutus', 'label' => 'من نحن', 'url' => route('aboutus')],
     ];

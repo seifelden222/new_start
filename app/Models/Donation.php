@@ -27,6 +27,16 @@ class Donation extends Model
         ];
     }
 
+    public function paymentMethodLabel(): string
+    {
+        return match ($this->payment_method) {
+            'wallet' => 'المحفظة',
+            'cash' => 'كاش',
+            'instapay' => 'إنستا باي',
+            default => $this->payment_method ?? '—',
+        };
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

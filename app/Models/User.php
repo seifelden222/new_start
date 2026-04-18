@@ -19,6 +19,12 @@ class User extends Authenticatable
 
     public const ROLE_USER = 'user';
 
+    public const ACCOUNT_TYPE_DONOR = 'donor';
+
+    public const ACCOUNT_TYPE_EMPLOYEE = 'employee';
+
+    public const ACCOUNT_TYPE_SPECIALIST = 'specialist';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,6 +36,7 @@ class User extends Authenticatable
         'address',
         'profile_photo_path',
         'role',
+        'account_type',
         'password',
         'balance',
     ];
@@ -65,6 +72,23 @@ class User extends Authenticatable
     public function dashboardRouteName(): string
     {
         return $this->isAdmin() ? 'admindashboard' : 'userdashboard';
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function accountTypes(): array
+    {
+        return [
+            self::ACCOUNT_TYPE_DONOR => 'متبرع',
+            self::ACCOUNT_TYPE_EMPLOYEE => 'موظف',
+            self::ACCOUNT_TYPE_SPECIALIST => 'أخصائي',
+        ];
+    }
+
+    public function accountTypeLabel(): string
+    {
+        return self::accountTypes()[$this->account_type] ?? 'مستخدم';
     }
 
     public function avatarUrl(): string

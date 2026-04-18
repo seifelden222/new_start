@@ -95,9 +95,9 @@
                                     </td>
                                     <td class="px-6 py-5 text-sm text-slate-500">{{ $donation->created_at->format('d M Y') }}</td>
                                     <td class="px-6 py-5 text-sm font-black text-emerald-600">{{ number_format($donation->amount) }} جنيه مصري</td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">{{ $donation->payment_method ?? '—' }}</td>
+                                    <td class="px-6 py-5 text-sm text-slate-500">{{ $donation->paymentMethodLabel() }}</td>
                                     <td class="px-6 py-5 text-center">
-                                        <button onclick="viewDonationReceipt('{{ $donation->charityCase?->title ?? 'تبرع عام' }}', '{{ number_format($donation->amount) }}', '{{ $donation->payment_method ?? '—' }}', '{{ $donation->created_at->format('d M Y') }}')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
+                                        <button onclick="viewDonationReceipt('{{ $donation->charityCase?->title ?? 'تبرع عام' }}', '{{ number_format($donation->amount) }}', '{{ $donation->paymentMethodLabel() }}', '{{ $donation->created_at->format('d M Y') }}')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
                                     </td>
                                 </tr>
                                 @empty

@@ -101,7 +101,8 @@
                 <!-- Welcome Section -->
                 <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
                     <h2 class="text-3xl font-black mb-2 text-primary">أهلاً بك {{ $user?->name ?? 'في منصة بداية جديدة' }} 👋</h2>
-                    <p class="text-slate-500 dark:text-slate-400 mb-6">لوحة التحكم الخاصة بك - تابعي تبرعاتك وأثرك في المجتمع</p>
+                    <p class="text-slate-500 dark:text-slate-400 mb-3">لوحة التحكم الخاصة بك - تابعي تبرعاتك وأثرك في المجتمع</p>
+                    <span class="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-black text-blue-600">{{ $user?->accountTypeLabel() }}</span>
                 </div>
 
                 <!-- Stats Cards -->

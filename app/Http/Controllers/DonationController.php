@@ -2,45 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDonationRequest;
 use App\Models\CharityCase;
 use App\Models\Donation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DonationController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function store(StoreDonationRequest $request): JsonResponse
     {
-        $request->validate([
-            'charity_case_id' => ['required', 'exists:charity_cases,id'],
-            'amount' => ['required', 'integer', 'min:1'],
-            'payment_method' => ['required', 'string'],
-        ]);
-
         $user = Auth::user();
+        $validated = $request->validated();
 
-        if ($user->balance < $request->amount) {
+        if ($user->balance < $validated['amount']) {
             return response()->json(['error' => 'رصيدك غير كافٍ، يرجى شحن المحفظة أولاً'], 422);
         }
 
-        $user->decrement('balance', $request->amount);
+        $donation = DB::transaction(function () use ($user, $validated): Donation {
+            $user->decrement('balance', $validated['amount']);
 
-        $donation = Donation::create([
-            'user_id' => $user->id,
-            'charity_case_id' => $request->charity_case_id,
-            'amount' => $request->amount,
-            'payment_method' => $request->payment_method,
-            'status' => 'مقبول',
-        ]);
+            $donation = Donation::create([
+                'user_id' => $user->id,
+                'charity_case_id' => $validated['charity_case_id'],
+                'amount' => $validated['amount'],
+                'payment_method' => 'wallet',
+                'status' => 'مقبول',
+            ]);
 
-        // Update collected amount on the case
-        CharityCase::find($request->charity_case_id)->increment('collected_amount', $request->amount);
+            CharityCase::query()
+                ->whereKey($validated['charity_case_id'])
+                ->increment('collected_amount', $validated['amount']);
+
+            return $donation;
+        });
 
         return response()->json([
             'balance' => $user->fresh()->balance,
             'donation_id' => $donation->id,
+            'message' => 'تم تنفيذ التبرع وخصم المبلغ من رصيدك بنجاح.',
         ]);
     }
 

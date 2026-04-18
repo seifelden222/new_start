@@ -16,7 +16,8 @@
                     <h4 class="text-base font-bold mb-5 text-white underline decoration-blue-500 underline-offset-8">روابط سريعة</h4>
                     <ul class="space-y-3 text-sm font-bold text-slate-300">
                         <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ url('/') }}">الرئيسية</a></li>
-                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('caseslist') }}">الحالات العاجلة</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('caseslist') }}">كل الحالات</a></li>
+                        <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('cases.urgent') }}">الحالات العاجلة</a></li>
                         <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('aboutus') }}">من نحن</a></li>
                         <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('contactus') }}">اتصل بنا</a></li>
                         <li><a class="hover:text-blue-400 transition-all flex items-center gap-2" href="{{ route('register') }}">انضم كمتطوع</a></li>

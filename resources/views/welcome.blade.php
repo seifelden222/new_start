@@ -190,20 +190,20 @@
                     <div class="h-56 overflow-hidden relative">
                         <img alt="عرض الحالات" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" />
                         <div class="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors"></div>
-                        <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-blue-600 text-sm font-bold">شفافية</div>
+                        <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-red-500 text-sm font-bold">أولوية قصوى</div>
                     </div>
                     <div class="p-8 flex flex-col flex-grow">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="material-symbols-outlined text-blue-600 bg-blue-50 p-2 rounded-xl">visibility</span>
-                            <a href="{{url('donation')}}">
-                                <h3 class="text-2xl font-bold text-[#0f172a]">عرض الحالات</h3>
+                            <span class="material-symbols-outlined text-red-500 bg-red-50 p-2 rounded-xl">emergency_home</span>
+                            <a href="{{ route('cases.urgent') }}">
+                                <h3 class="text-2xl font-bold text-[#0f172a]">الحالات العاجلة</h3>
                             </a>
                         </div>
                         <p class="text-slate-600 leading-relaxed mb-8 flex-grow text-lg">
-                            اطلع على القصص والحالات الإنسانية التي تحتاج إلى دعم عاجل. كن جزءاً فعالاً من قصة نجاحهم القادمة.
+                            قسم مستقل وواضح للحالات التي تحتاج تدخلاً سريعًا، مع ربط مباشر بصفحات الدعم والتبرع بعد تسجيل الدخول.
                         </p>
-                        <a class="group/link inline-flex items-center gap-2 text-blue-600 font-bold hover:gap-4 transition-all" href="{{url('caseslist')}}">
-                            تصفح الحالات
+                        <a class="group/link inline-flex items-center gap-2 text-red-500 font-bold hover:gap-4 transition-all" href="{{ route('cases.urgent') }}">
+                            اذهب إلى القسم العاجل
                             <span class="material-symbols-outlined text-xl rotate-180 transition-transform group-hover/link:translate-x-[-5px]">arrow_right_alt</span>
                         </a>
                     </div>
