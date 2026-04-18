@@ -57,6 +57,7 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+    @php use Illuminate\Support\Facades\Storage; @endphp
     <div class="flex min-h-screen">
         <x-admin-slider />
         <main class="flex-1 mr-72 transition-all duration-300">
@@ -98,36 +99,65 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @forelse($cases as $case)
+                                @php
+                                    $statusColors = [
+                                        'عاجلة' => 'bg-red-100 text-red-700',
+                                        'نشطة'  => 'bg-amber-100 text-amber-700',
+                                        'مكتملة'=> 'bg-emerald-100 text-emerald-700',
+                                        'معلقة' => 'bg-blue-100 text-blue-700',
+                                    ];
+                                    $barColors = [
+                                        'عاجلة' => 'bg-red-500',
+                                        'نشطة'  => 'bg-amber-500',
+                                        'مكتملة'=> 'bg-emerald-500',
+                                        'معلقة' => 'bg-blue-500',
+                                    ];
+                                @endphp
                                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
                                             <div class="size-8 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-                                                <img src="../assets/img/girl.jpg" class="w-full h-full object-cover">
+                                                @if($case->image)
+                                                    <img src="{{ Storage::url($case->image) }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="w-full h-full bg-primary/20 flex items-center justify-center">
+                                                        <span class="material-symbols-outlined text-primary text-sm">volunteer_activism</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                             <div class="min-w-0">
-                                                <p class="font-bold text-sm text-slate-900 dark:text-white case-name truncate">عملية قلب عاجلة لـ أحمد</p>
-                                                <p class="text-xs text-slate-500 case-id">#CASE-4782</p>
+                                                <p class="font-bold text-sm text-slate-900 dark:text-white case-name truncate">{{ $case->title }}</p>
+                                                <p class="text-xs text-slate-500 case-id">#CASE-{{ $case->id }}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-3 py-3 text-sm font-medium">طبية</td>
+                                    <td class="px-3 py-3 text-sm font-medium">{{ $case->category }}</td>
                                     <td class="px-3 py-3 text-center">
-                                        <span class="status-badge inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300">عاجلة</span>
+                                        <span class="status-badge inline-flex px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$case->status] ?? 'bg-slate-100 text-slate-700' }}">{{ $case->status }}</span>
                                     </td>
                                     <td class="px-3 py-3">
                                         <div class="w-20 bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-                                            <div class="bg-primary h-2 rounded-full" style="width: 42%"></div>
+                                            <div class="{{ $barColors[$case->status] ?? 'bg-primary' }} h-2 rounded-full" style="width: {{ $case->progressPercent() }}%"></div>
                                         </div>
-                                        <p class="text-xs text-slate-500 mt-1">42%</p>
+                                        <p class="text-xs text-slate-500 mt-1">{{ $case->progressPercent() }}%</p>
                                     </td>
-                                    <td class="px-3 py-3 font-bold text-sm text-emerald-600">4,820</td>
+                                    <td class="px-3 py-3 font-bold text-sm text-emerald-600">{{ number_format($case->collected_amount) }}</td>
                                     <td class="px-3 py-3 text-center">
                                         <div class="flex items-center justify-center gap-2">
-                                            <button onclick="editCase('4782')" class="text-primary hover:text-blue-700"><span class="material-symbols-outlined text-lg">edit</span></button>
-                                            <button onclick="deleteRow(this)" class="text-red-600 hover:text-red-700"><span class="material-symbols-outlined text-lg">delete</span></button>
+                                            <form method="POST" action="{{ route('cases.destroy', $case) }}" onsubmit="return confirm('هل تريد حذف هذه الحالة؟')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-700"><span class="material-symbols-outlined text-lg">delete</span></button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-10 text-center text-slate-400 font-bold">لا توجد حالات بعد — <a href="{{ route('addcase') }}" class="text-primary underline">أضف حالة جديدة</a></td>
+                                </tr>
+                                @endforelse
+                            </tbody>
                                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
@@ -225,11 +255,7 @@
 
                 <div class="flex items-center justify-between flex-wrap gap-4 pt-6">
                     <div class="text-sm text-slate-500 dark:text-slate-400">
-                        عرض ١–٤ من ٤ حالات
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="px-5 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm font-medium disabled:opacity-50" disabled>السابق</button>
-                        <button class="px-5 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:bg-blue-600 transition-colors">التالي</button>
+                        إجمالي {{ $cases->count() }} حالة
                     </div>
                 </div>
 

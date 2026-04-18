@@ -86,6 +86,7 @@
                                     >
                                 </div>
                                 <x-input-error :messages="$errors->get('name')" class="mt-2 text-right text-xs font-extrabold text-red-500" />
+                                <p id="nameLiveError" class="hidden mt-2 text-right text-xs font-extrabold text-red-500">الاسم يجب أن يحتوي على حروف فقط بدون أرقام أو رموز</p>
                             </div>
 
                             <div>
@@ -99,7 +100,7 @@
                                     <input
                                         id="email"
                                         name="email"
-                                        type="email"
+                                        type="text"
                                         value="{{ old('email') }}"
                                         required
                                         autocomplete="username"
@@ -108,10 +109,8 @@
                                     >
                                 </div>
                                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-right text-xs font-extrabold text-red-500" />
+                                <p id="emailLiveError" class="hidden mt-2 text-right text-xs font-extrabold text-red-500">يرجى إدخال بريد إلكتروني صحيح (مثال: name@gmail.com)</p>
                             </div>
-
-                            <div>
-
 
                             <div>
                                 <label for="password" class="mb-2 me-1 block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400">
@@ -141,6 +140,7 @@
                                     </button>
                                 </div>
                                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-right text-xs font-extrabold text-red-500" />
+                                <p id="passwordLiveError" class="hidden mt-2 text-right text-xs font-extrabold text-red-500">كلمة المرور يجب أن تكون أرقاماً فقط ولا تقل عن 8 أرقام</p>
                             </div>
 
                             <div>
@@ -171,6 +171,7 @@
                                     </button>
                                 </div>
                                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-right text-xs font-extrabold text-red-500" />
+                                <p id="confirmLiveError" class="hidden mt-2 text-right text-xs font-extrabold text-red-500">كلمة المرور غير متطابقة</p>
                             </div>
 
                             <div class="pt-4">
@@ -224,6 +225,52 @@
                 passwordField.type = isPassword ? 'text' : 'password';
                 icon.textContent = isPassword ? 'visibility_off' : 'visibility';
             });
+        });
+
+        const emailPattern = /^[^\s@]+@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/;
+
+        function showError(id, show) {
+            document.getElementById(id).classList.toggle('hidden', !show);
+        }
+
+        function markInput(el, hasError) {
+            el.classList.toggle('border-red-400', hasError);
+            el.classList.toggle('focus:ring-red-100', hasError);
+        }
+
+        // Name: letters only
+        document.getElementById('name').addEventListener('input', function () {
+            const ok = this.value === '' || /^[\p{L}\s]+$/u.test(this.value);
+            showError('nameLiveError', !ok && this.value !== '');
+            markInput(this, !ok && this.value !== '');
+        });
+
+        // Email: valid format
+        document.getElementById('email').addEventListener('input', function () {
+            const ok = this.value === '' || emailPattern.test(this.value.trim());
+            showError('emailLiveError', !ok && this.value !== '');
+            markInput(this, !ok && this.value !== '');
+        });
+
+        // Password: digits only, min 8
+        document.getElementById('password').addEventListener('input', function () {
+            const ok = this.value === '' || /^\d{8,}$/.test(this.value);
+            showError('passwordLiveError', !ok && this.value !== '');
+            markInput(this, !ok && this.value !== '');
+            // Re-check confirmation
+            const conf = document.getElementById('password_confirmation').value;
+            if (conf !== '') {
+                const match = conf === this.value;
+                showError('confirmLiveError', !match);
+                markInput(document.getElementById('password_confirmation'), !match);
+            }
+        });
+
+        // Confirm password: must match
+        document.getElementById('password_confirmation').addEventListener('input', function () {
+            const match = this.value === document.getElementById('password').value;
+            showError('confirmLiveError', !match && this.value !== '');
+            markInput(this, !match && this.value !== '');
         });
     </script>
 </x-guest-layout>

@@ -64,24 +64,25 @@
             <x-admin-navbar />
             <div class="p-8 space-y-8">
 
-                <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-2">إجمالي المستخدمين</p>
-                        <h4 class="text-3xl font-black text-slate-800 dark:text-white">1,250</h4>
+                        <h4 class="text-3xl font-black text-slate-800 dark:text-white">{{ number_format($totalUsers) }}</h4>
                     </div>
                     <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-2">الحالات النشطة</p>
-                        <h4 class="text-3xl font-black text-primary">85</h4>
+                        <h4 class="text-3xl font-black text-primary">{{ $activeCases }}</h4>
                     </div>
                     <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-2">إجمالي التبرعات</p>
-                        <h4 class="text-3xl font-black text-emerald-600">45,000 ج.م</h4>
+                        <h4 class="text-3xl font-black text-emerald-600">{{ number_format($totalDonations) }} ج.م</h4>
                     </div>
                     <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <p class="text-slate-400 text-xs font-bold uppercase mb-2">مهام معلقة</p>
-                        <h4 class="text-3xl font-black text-amber-600">12</h4>
+                        <p class="text-slate-400 text-xs font-bold uppercase mb-2">طلبات معلقة</p>
+                        <h4 class="text-3xl font-black text-amber-600">{{ $pendingOrders }}</h4>
                     </div>
-                </div> -->
+                </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
@@ -290,10 +291,10 @@
             new Chart(document.getElementById('donationChart'), {
                 type: 'line',
                 data: {
-                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                    labels: @json($monthlyLabels),
                     datasets: [{
                         label: 'التبرعات',
-                        data: [15000, 45000, 20000, 60000, 90000, 75000],
+                        data: @json($monthlyData),
                         borderColor: '#007bff',
                         backgroundColor: 'rgba(0, 123, 255, 0.05)',
                         borderWidth: 3,
@@ -303,30 +304,10 @@
                 },
                 options: {
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            grid: {
-                                display: true,
-                                color: 'rgba(0,0,0,0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    onClick: (e, activeEls) => {
-                        if (activeEls.length > 0) {
-                            const index = activeEls[0].index;
-                            const month = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'][index];
-                            alert(`عرض تفاصيل شهر ${month}`);
-                        }
+                        y: { grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } }
                     }
                 }
             });
@@ -334,10 +315,10 @@
             new Chart(document.getElementById('caseChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['أيتام', 'مشردين', 'دعم طبي', 'تعليم'],
+                    labels: @json($caseCategories->keys()),
                     datasets: [{
-                        data: [45, 25, 20, 10],
-                        backgroundColor: ['#007bff', '#10b981', '#f59e0b', '#6366f1'],
+                        data: @json($caseCategories->values()),
+                        backgroundColor: ['#007bff', '#10b981', '#f59e0b', '#6366f1', '#f43f5e'],
                         borderWidth: 0
                     }]
                 },
@@ -347,19 +328,7 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: {
-                                padding: 15,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        }
-                    },
-                    onClick: (e, activeEls) => {
-                        if (activeEls.length > 0) {
-                            const index = activeEls[0].index;
-                            const category = ['أيتام', 'مشردين', 'دعم طبي', 'تعليم'][index];
-                            alert(`عرض حالات فئة: ${category}`);
+                            labels: { padding: 15, font: { size: 12 } }
                         }
                     }
                 }

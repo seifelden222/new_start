@@ -39,19 +39,25 @@ Route::view('/case6', 'case6')->name('case6');
 
 // user routes
 Route::middleware('auth')->group(function () {
-    Route::view('/userdashboard', 'user.userdashboard')->name('userdashboard');
-    Route::view('/mycases', 'user.mycases')->name('mycases');
-    Route::view('/mydonate', 'user.mydonate')->name('mydonate');
+    Route::get('/userdashboard', [\App\Http\Controllers\User\UserDashboardController::class, 'index'])->name('userdashboard');
+    Route::get('/mycases', [\App\Http\Controllers\User\UserDashboardController::class, 'myCases'])->name('mycases');
+    Route::get('/mydonate', [\App\Http\Controllers\User\UserDashboardController::class, 'myDonations'])->name('mydonate');
+    Route::post('/wallet/charge', [\App\Http\Controllers\WalletController::class, 'charge'])->name('wallet.charge');
+    Route::post('/donate', [\App\Http\Controllers\DonationController::class, 'store'])->name('donate');
 });
 
 Route::middleware('auth')->prefix('admin')->group(function () {
-    Route::view('/admindashboard', 'admin.admindashboard')->name('admindashboard');
-    Route::view('/addcase', 'admin.addcase')->name('addcase');
-    Route::view('/casemanage', 'admin.casemanage')->name('casemanage');
+    Route::get('/admindashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admindashboard');
+    Route::get('/casemanage', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'cases'])->name('casemanage');
+    Route::get('/addcase', fn () => view('admin.addcase'))->name('addcase');
+    Route::post('/cases', [\App\Http\Controllers\CharityCaseController::class, 'store'])->name('cases.store');
+    Route::put('/cases/{charityCase}', [\App\Http\Controllers\CharityCaseController::class, 'update'])->name('cases.update');
+    Route::delete('/cases/{charityCase}', [\App\Http\Controllers\CharityCaseController::class, 'destroy'])->name('cases.destroy');
+    Route::get('/donors', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'donors'])->name('donors');
     Route::redirect('/doners', '/admin/donors');
-    Route::view('/donors', 'admin.doners')->name('donors');
-    Route::view('/orders', 'admin.orders')->name('orders');
-    Route::view('/reports', 'admin.reports')->name('reports');
+    Route::get('/orders', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'orders'])->name('orders');
+    Route::patch('/orders/{donation}', [\App\Http\Controllers\DonationController::class, 'updateStatus'])->name('orders.update');
+    Route::get('/reports', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'reports'])->name('reports');
 });
 
 require __DIR__.'/auth.php';

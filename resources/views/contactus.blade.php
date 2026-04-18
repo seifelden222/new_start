@@ -25,9 +25,9 @@
 
         .error-msg {
             color: #ef4444;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 800;
-            margin-top: 4px;
+            margin-top: 6px;
             display: none;
         }
 
@@ -157,7 +157,8 @@
 
     <script>
         function isStrictEmail(email) {
-            const pattern = /^[^\s@]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+            // Accepts all known TLDs (gmail, yahoo, hotmail, outlook, etc.)
+            const pattern = /^[^\s@]+@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/;
             return pattern.test(email);
         }
 
@@ -176,12 +177,22 @@
 
         document.getElementById('emailInp').addEventListener('input', function() {
             const val = this.value.trim();
-            if (!isStrictEmail(val) && val !== "") {
+            const errorEl = document.getElementById('emailError');
+            if (val !== "" && !isStrictEmail(val)) {
                 this.classList.add('input-error');
-                document.getElementById('emailError').style.display = 'block';
+                errorEl.style.display = 'block';
             } else {
                 this.classList.remove('input-error');
-                document.getElementById('emailError').style.display = 'none';
+                errorEl.style.display = 'none';
+            }
+        });
+
+        document.getElementById('emailInp').addEventListener('blur', function() {
+            const val = this.value.trim();
+            const errorEl = document.getElementById('emailError');
+            if (val !== "" && !isStrictEmail(val)) {
+                this.classList.add('input-error');
+                errorEl.style.display = 'block';
             }
         });
 

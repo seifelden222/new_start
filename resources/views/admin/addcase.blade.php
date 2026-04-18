@@ -72,7 +72,15 @@
 
             <div class="p-10 animate-fade-in">
                 <div class="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-sm p-10">
-                    <form id="addCaseForm" onsubmit="handleSubmit(event)" class="space-y-10">
+
+                    @if(session('success'))
+                        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl font-bold">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('cases.store') }}" enctype="multipart/form-data" class="space-y-10">
+                        @csrf
 
                         <section>
                             <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-2 italic">
@@ -86,11 +94,11 @@
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-bold text-slate-600 mr-2">رقم الحالة</label>
-                                    <input type="text" name="caseId" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 italic font-bold" value="#CASE-8842" readonly>
+                                    <input type="text" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 italic font-bold text-slate-400" value="يتم توليده تلقائياً" readonly>
                                 </div>
                                 <div class="md:col-span-2 space-y-2">
                                     <label class="text-sm font-bold text-slate-600 mr-2">الوصف التفصيلي *</label>
-                                    <textarea required rows="4" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 italic font-bold placeholder:text-slate-300" placeholder="اشرح تفاصيل الحالة واحتياجاتها..."></textarea>
+                                    <textarea required name="description" rows="4" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 italic font-bold placeholder:text-slate-300" placeholder="اشرح تفاصيل الحالة واحتياجاتها..."></textarea>
                                 </div>
                             </div>
                         </section>
@@ -102,17 +110,19 @@
                                     التصنيف والأولوية
                                 </h3>
                                 <div class="space-y-4">
-                                    <select required class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 font-bold italic">
+                                    <select required name="category" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 font-bold italic">
                                         <option value="">اختر الفئة</option>
-                                        <option>طبي</option>
-                                        <option>إيواء</option>
-                                        <option>غذائي</option>
+                                        <option>طبية</option>
+                                        <option>سكن</option>
+                                        <option>تعليم</option>
+                                        <option>غذاء</option>
+                                        <option>أخرى</option>
                                     </select>
-                                    <select required class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 font-bold italic text-rose-600">
+                                    <select required name="status" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 font-bold italic text-rose-600">
                                         <option value="">مستوى الأولوية</option>
-                                        <option>عاجلة جداً</option>
-                                        <option>متوسطة</option>
-                                        <option>عادية</option>
+                                        <option value="عاجلة">عاجلة</option>
+                                        <option value="نشطة">نشطة</option>
+                                        <option value="معلقة">معلقة</option>
                                     </select>
                                 </div>
                             </div>
@@ -123,10 +133,9 @@
                                 </h3>
                                 <div class="space-y-4">
                                     <div class="relative">
-                                        <input required type="number" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 font-bold italic" placeholder="المبلغ المطلوب">
+                                        <input required type="number" name="target_amount" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 font-bold italic" placeholder="المبلغ المطلوب">
                                         <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400 italic font-bold">ج.م</span>
                                     </div>
-                                    <input type="date" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 font-bold italic text-slate-400">
                                 </div>
                             </div>
                         </section>
@@ -138,7 +147,7 @@
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div onclick="document.getElementById('mainImage').click()" class="file-drop-area border-2 border-dashed border-slate-200 rounded-[2rem] p-8 text-center cursor-pointer hover:border-primary transition-all group">
-                                    <input type="file" id="mainImage" class="hidden" accept="image/*" onchange="previewImage(this, 'preview1')">
+                                    <input type="file" id="mainImage" name="image" class="hidden" accept="image/*" onchange="previewImage(this, 'preview1')">
                                     <div id="preview1" class="space-y-2">
                                         <span class="material-symbols-outlined text-4xl text-slate-300 group-hover:text-primary transition-colors">add_photo_alternate</span>
                                         <p class="text-sm font-bold text-slate-400 italic">ارفع الصورة الرئيسية للحالة</p>

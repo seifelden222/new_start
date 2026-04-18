@@ -116,7 +116,7 @@
                             <div>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">رصيد المحفظة</p>
                                 <h3 class="text-2xl font-black text-slate-900 dark:text-white">
-                                    <span id="walletBalance" data-value="2450" data-target="2450">0</span>
+                                    <span id="walletBalance" data-value="{{ $user?->balance ?? 0 }}" data-target="{{ $user?->balance ?? 0 }}">0</span>
                                     <span class="text-sm text-slate-400"> ج.م</span>
                                 </h3>
                             </div>
@@ -135,13 +135,13 @@
                             <div>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">إجمالي التبرعات</p>
                                 <h3 class="text-2xl font-black text-emerald-600">
-                                    <span id="totalDonations" data-value="0" data-target="15800">0</span>
+                                    <span id="totalDonations" data-value="0" data-target="{{ $totalDonated }}">0</span>
                                     <span class="text-sm text-slate-400"> ج.م</span>
                                 </h3>
                             </div>
                         </div>
                         <p class="text-xs text-emerald-600 font-bold">
-                            تم مساعدة <span id="helpedCount" data-value="0" data-target="24">0</span> شخص ✓
+                            تم مساعدة <span id="helpedCount" data-value="0" data-target="{{ $helpedCount }}">0</span> شخص ✓
                         </p>
                     </div>
 
@@ -153,8 +153,9 @@
                             </div>
                             <div>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">نقاط الأثر</p>
+                                @php $impactPoints = (int)($totalDonated / 10); @endphp
                                 <h3 class="text-2xl font-black text-amber-500">
-                                    <span id="impactPoints" data-value="0" data-target="1240">0</span>
+                                    <span id="impactPoints" data-value="0" data-target="{{ $impactPoints }}">0</span>
                                     <span class="text-sm text-slate-400"> نقطة</span>
                                 </h3>
                             </div>
@@ -185,7 +186,7 @@
                         <h3 class="text-lg font-black text-slate-900 dark:text-white">آخر التبرعات</h3>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-right">
+                        <table id="donationsTable" class="w-full text-right">
                             <thead class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700">
                                 <tr>
                                     <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">رقم العملية</th>
@@ -196,50 +197,23 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @forelse($donations->take(10) as $donation)
                                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-6 py-4 text-sm text-slate-500">#TX-9820</td>
-                                    <td class="px-6 py-4 font-bold text-sm">تأهيل أيتام</td>
-                                    <td class="px-6 py-4 font-bold text-emerald-600">1,200 ج.م</td>
-                                    <td class="px-6 py-4 text-sm text-slate-500">2026-03-01</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">#TX-{{ $donation->id }}</td>
+                                    <td class="px-6 py-4 font-bold text-sm">{{ $donation->charityCase?->category ?? '—' }}</td>
+                                    <td class="px-6 py-4 font-bold text-emerald-600">{{ number_format($donation->amount) }} ج.م</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">{{ $donation->created_at->format('Y-m-d') }}</td>
                                     <td class="px-6 py-4 text-center">
-                                        <button onclick="viewReceipt('#TX-9820', 'تأهيل أيتام', '1,200')" class="text-primary hover:text-blue-700">
+                                        <button onclick="viewReceipt('#TX-{{ $donation->id }}', '{{ $donation->charityCase?->category ?? '—' }}', '{{ number_format($donation->amount) }}')" class="text-primary hover:text-blue-700">
                                             <span class="material-symbols-outlined">article</span>
                                         </button>
                                     </td>
                                 </tr>
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-6 py-4 text-sm text-slate-500">#TX-9512</td>
-                                    <td class="px-6 py-4 font-bold text-sm">سكن مشردين</td>
-                                    <td class="px-6 py-4 font-bold text-emerald-600">3,500 ج.م</td>
-                                    <td class="px-6 py-4 text-sm text-slate-500">2026-02-15</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button onclick="viewReceipt('#TX-9512', 'سكن مشردين', '3,500')" class="text-primary hover:text-blue-700">
-                                            <span class="material-symbols-outlined">article</span>
-                                        </button>
-                                    </td>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-10 text-center text-slate-400 font-bold">لا توجد تبرعات بعد</td>
                                 </tr>
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-6 py-4 text-sm text-slate-500">#TX-9440</td>
-                                    <td class="px-6 py-4 font-bold text-sm">تجهيز عرائس</td>
-                                    <td class="px-6 py-4 font-bold text-emerald-600">5,000 ج.م</td>
-                                    <td class="px-6 py-4 text-sm text-slate-500">2026-02-01</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button onclick="viewReceipt('#TX-9440', 'تجهيز عرائس', '5,000')" class="text-primary hover:text-blue-700">
-                                            <span class="material-symbols-outlined">article</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-6 py-4 text-sm text-slate-500">#TX-9310</td>
-                                    <td class="px-6 py-4 font-bold text-sm">كفالة تعليمية</td>
-                                    <td class="px-6 py-4 font-bold text-emerald-600">800 ج.م</td>
-                                    <td class="px-6 py-4 text-sm text-slate-500">2026-01-20</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button onclick="viewReceipt('#TX-9310', 'كفالة تعليمية', '800')" class="text-primary hover:text-blue-700">
-                                            <span class="material-symbols-outlined">article</span>
-                                        </button>
-                                    </td>
-                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -325,7 +299,7 @@
                 data: {
                     labels: ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
                     datasets: [{
-                        data: [30, 80, 45, 90, 60, 120, 100],
+                        data: @json($weeklyData),
                         borderColor: '#007bff',
                         borderWidth: 3,
                         tension: 0.4,
@@ -387,22 +361,21 @@
         }
 
         /* ═══════════════════════════════════════════════
-           SEARCH
+           SEARCH — filters the recent donations table
         ═══════════════════════════════════════════════ */
-        document.addEventListener('DOMContentLoaded', function () {
-            var searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function (e) {
-                    var searchTerm = e.target.value.toLowerCase();
-                    console.log('البحث عن:', searchTerm);
-                });
-            }
-        });
 
         /* ═══════════════════════════════════════════════
            CHARGE WALLET
         ═══════════════════════════════════════════════ */
         function chargeWallet() {
+            var balanceEl   = document.getElementById('walletBalance');
+            var donationsEl = document.getElementById('totalDonations');
+            // Read from data-target (real DB value) not data-value (animation progress)
+            var balance   = parseInt(balanceEl.dataset.target) || 0;
+            var donations = parseInt(donationsEl.dataset.target) || 0;
+
+            document.getElementById('popupCurrentBalance').textContent  = balance.toLocaleString('en-US') + ' ج.م';
+            document.getElementById('popupTotalDonations').textContent  = donations.toLocaleString('en-US') + ' ج.م';
             document.getElementById('chargeWalletPopup').classList.remove('hidden');
         }
 
@@ -434,34 +407,44 @@
                 return;
             }
 
-            // ── Close popup first ──
-            closeChargeWallet();
+            // Send to backend
+            fetch('{{ route("wallet.charge") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ amount: amount }),
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                closeChargeWallet();
 
-            // ── Get wallet element & current value ──
-            var balanceEl  = document.getElementById('walletBalance');
-            var oldValue   = parseInt(balanceEl.dataset.value) || 0;
-            var newValue   = oldValue + amount;   // <<< exact number typed is added
+                var balanceEl = document.getElementById('walletBalance');
+                var newValue  = data.balance;
 
-            // ── Flash the card green ──
-            var card = document.getElementById('walletCard');
-            card.classList.remove('wallet-flash');
-            // Force reflow so animation restarts even if triggered twice fast
-            void card.offsetWidth;
-            card.classList.add('wallet-flash');
-            setTimeout(function () { card.classList.remove('wallet-flash'); }, 950);
+                // Update data-target so popup shows correct value next time
+                balanceEl.dataset.target = newValue;
 
-            // ── Count up from old balance to new balance ──
-            // Duration scales with how big the jump is (min 800ms, max 1400ms)
-            var duration = Math.min(800 + amount / 10, 1400);
-            countUp(balanceEl, newValue, duration);
+                var card = document.getElementById('walletCard');
+                card.classList.remove('wallet-flash');
+                void card.offsetWidth;
+                card.classList.add('wallet-flash');
+                setTimeout(function () { card.classList.remove('wallet-flash'); }, 950);
 
-            showToast('✅ تم شحن ' + amount.toLocaleString('en-US') + ' ج.م عبر ' + selectedPayment, 'success');
+                var duration = Math.min(800 + amount / 10, 1400);
+                countUp(balanceEl, newValue, duration);
 
-            // Reset form
-            inputEl.value    = '';
-            selectedPayment  = '';
-            document.querySelectorAll('.payment-method').forEach(function (btn) {
-                btn.classList.remove('border-primary', 'bg-primary/10');
+                showToast('✅ تم شحن ' + amount.toLocaleString('en-US') + ' ج.م عبر ' + selectedPayment, 'success');
+
+                inputEl.value   = '';
+                selectedPayment = '';
+                document.querySelectorAll('.payment-method').forEach(function (btn) {
+                    btn.classList.remove('border-primary', 'bg-primary/10');
+                });
+            })
+            .catch(function () {
+                showToast('❌ حدث خطأ، حاول مرة أخرى', 'error');
             });
         }
 
@@ -528,6 +511,18 @@
         window.onload = function () {
             initCharts();
             runPageLoadCountUps();
+
+            // Search
+            var searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function (e) {
+                    var searchTerm = e.target.value.toLowerCase().trim();
+                    var rows = document.querySelectorAll('#donationsTable tbody tr');
+                    rows.forEach(function (row) {
+                        row.style.display = searchTerm === '' || row.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
+                    });
+                });
+            }
         };
     </script>
 
@@ -606,6 +601,17 @@
                 </button>
             </div>
             <div class="p-6">
+                <!-- Wallet summary -->
+                <div class="mb-5 grid grid-cols-2 gap-3">
+                    <div class="rounded-xl bg-blue-50 dark:bg-blue-900/20 p-3 text-center">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">رصيدك الحالي</p>
+                        <p class="text-lg font-black text-primary" id="popupCurrentBalance">0 ج.م</p>
+                    </div>
+                    <div class="rounded-xl bg-emerald-50 dark:bg-emerald-900/20 p-3 text-center">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">إجمالي تبرعاتك</p>
+                        <p class="text-lg font-black text-emerald-600" id="popupTotalDonations">0 ج.م</p>
+                    </div>
+                </div>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">المبلغ (ج.م)</label>
                     <input type="number" id="chargeAmount"

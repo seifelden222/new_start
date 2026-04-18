@@ -28,8 +28,21 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'email' => ['required', 'string', 'email:rfc'],
+            'password' => ['required', 'string', 'regex:/^\d{8,}$/'],
+        ];
+    }
+
+    /**
+     * Get custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'email.email' => 'يرجى إدخال بريد إلكتروني صحيح.',
+            'password.regex' => 'كلمة المرور يجب أن تكون أرقاماً فقط ولا تقل عن 8 أرقام.',
         ];
     }
 

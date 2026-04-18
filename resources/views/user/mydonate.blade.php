@@ -66,7 +66,7 @@
 
                 <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
                     <h2 class="text-3xl font-black mb-2 text-primary">تبرعاتي</h2>
-                    <p class="text-slate-500 dark:text-slate-400 mb-8">جميع التبرعات التي قمت بها حتى الآن - إجمالي: 1,250.00 جنيه مصري</p>
+                    <p class="text-slate-500 dark:text-slate-400 mb-8">جميع التبرعات التي قمت بها حتى الآن - إجمالي: {{ number_format($totalDonated) }} جنيه مصري</p>
 
                     <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
                         <table class="w-full text-right">
@@ -80,114 +80,38 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-
+                                @forelse($donations as $donation)
                                 <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                                     <td class="px-6 py-5">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img class="w-full h-full object-cover" src="../assets/img/man.jpg" />
+                                            <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <span class="material-symbols-outlined text-primary text-sm">volunteer_activism</span>
                                             </div>
                                             <div>
-                                                <p class="font-bold text-sm">عائلة أم محمد</p>
-                                                <p class="text-xs text-slate-500">دعم غذائي شهري</p>
+                                                <p class="font-bold text-sm">{{ $donation->charityCase?->title ?? 'تبرع عام' }}</p>
+                                                <p class="text-xs text-slate-500">{{ $donation->charityCase?->category ?? '—' }}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">منذ يومين</td>
-                                    <td class="px-6 py-5 text-sm font-black text-emerald-600">50.00 جنيه مصري</td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">فيزا كارد</td>
+                                    <td class="px-6 py-5 text-sm text-slate-500">{{ $donation->created_at->format('d M Y') }}</td>
+                                    <td class="px-6 py-5 text-sm font-black text-emerald-600">{{ number_format($donation->amount) }} جنيه مصري</td>
+                                    <td class="px-6 py-5 text-sm text-slate-500">{{ $donation->payment_method ?? '—' }}</td>
                                     <td class="px-6 py-5 text-center">
-                                        <button onclick="viewDonationReceipt('عائلة أم محمد', '50.00', 'فيزا كارد', 'منذ يومين')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
+                                        <button onclick="viewDonationReceipt('{{ $donation->charityCase?->title ?? 'تبرع عام' }}', '{{ number_format($donation->amount) }}', '{{ $donation->payment_method ?? '—' }}', '{{ $donation->created_at->format('d M Y') }}')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
                                     </td>
                                 </tr>
-
-                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                    <td class="px-6 py-5">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img class="w-full h-full object-cover" src="../assets/img/girl.jpg" />
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-sm">كبار السن - حي البساتين</p>
-                                                <p class="text-xs text-slate-500">ادخار أدوية شهرية</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">14 أكتوبر 2023</td>
-                                    <td class="px-6 py-5 text-sm font-black text-emerald-600">120.00 جنيه مصري</td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">فودافون كاش</td>
-                                    <td class="px-6 py-5 text-center">
-                                        <button onclick="viewDonationReceipt('كبار السن - حي البساتين', '120.00', 'فودافون كاش', '14 أكتوبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
-                                    </td>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-10 text-center text-slate-400 font-bold">لا توجد تبرعات بعد</td>
                                 </tr>
-
-                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                    <td class="px-6 py-5">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img class="w-full h-full object-cover" src="../assets/img/man6.jpg" />
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-sm">علاج طفل طارئ</p>
-                                                <p class="text-xs text-slate-500">عملية جراحية عاجلة</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">10 أكتوبر 2023</td>
-                                    <td class="px-6 py-5 text-sm font-black text-emerald-600">300.00 جنيه مصري</td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">بطاقة بنكية</td>
-                                    <td class="px-6 py-5 text-center">
-                                        <button onclick="viewDonationReceipt('علاج طفل طارئ', '300.00', 'بطاقة بنكية', '10 أكتوبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
-                                    </td>
-                                </tr>
-
-                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                    <td class="px-6 py-5">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img class="w-full h-full object-cover" src="../assets/img/Poor-family.jpg" />
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-sm">دعم أهالي غزة - حملة الشتاء</p>
-                                                <p class="text-xs text-slate-500">بطانيات ومدفأة</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">5 أكتوبر 2023</td>
-                                    <td class="px-6 py-5 text-sm font-black text-emerald-600">200.00 جنيه مصري</td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">إنستاباي</td>
-                                    <td class="px-6 py-5 text-center">
-                                        <button onclick="viewDonationReceipt('دعم أهالي غزة - حملة الشتاء', '200.00', 'إنستاباي', '5 أكتوبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
-                                    </td>
-                                </tr>
-
-                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                    <td class="px-6 py-5">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img class="w-full h-full object-cover" src="../assets/img/baby.jpg" />
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-sm">حملة قلب طفل</p>
-                                                <p class="text-xs text-slate-500">دعم عملية قلب مفتوح</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">28 سبتمبر 2023</td>
-                                    <td class="px-6 py-5 text-sm font-black text-emerald-600">580.00 جنيه مصري</td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">فيزا كارد</td>
-                                    <td class="px-6 py-5 text-center">
-                                        <button onclick="viewDonationReceipt('حملة قلب طفل', '580.00', 'فيزا كارد', '28 سبتمبر 2023')" class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-2xl">receipt_long</button>
-                                    </td>
-                                </tr>
-
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
 
                     <div class="mt-8 flex justify-between items-center flex-wrap gap-4">
                         <div class="text-sm text-slate-500">
-                            عرض 1–5 من 12 تبرع
+                            عرض {{ $donations->firstItem() ?? 0 }}–{{ $donations->lastItem() ?? 0 }} من {{ $donations->total() }} تبرع
                         </div>
                         <div class="flex gap-2">
                             <button class="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium disabled:opacity-50" disabled>السابق</button>

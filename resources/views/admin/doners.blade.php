@@ -104,121 +104,46 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @forelse($donors as $donor)
+                                @php
+                                    $total = $donor->total_donated ?? 0;
+                                    if ($total >= 50000) { $level = 'ماسي'; $levelClass = 'bg-indigo-100 text-indigo-700'; }
+                                    elseif ($total >= 20000) { $level = 'ذهبي'; $levelClass = 'bg-yellow-100 text-yellow-700'; }
+                                    elseif ($total >= 5000) { $level = 'فضي'; $levelClass = 'bg-amber-100 text-amber-700'; }
+                                    else { $level = 'عادي'; $levelClass = 'bg-slate-100 text-slate-600'; }
+                                @endphp
                                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                                     <td class="px-3 py-3 text-center">
                                         <input type="checkbox" class="rounded border-slate-300">
                                     </td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
-                                            <div class="size-8 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-                                                <img src="../assets/img/girl.jpg" class="w-full h-full object-cover">
+                                            <div class="size-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                                <span class="material-symbols-outlined text-primary text-sm">person</span>
                                             </div>
                                             <div class="min-w-0">
-                                                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">محمد علي</p>
-                                                <p class="text-xs text-slate-500 truncate">mohamed@example.com</p>
+                                                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">{{ $donor->name }}</p>
+                                                <p class="text-xs text-slate-500 truncate">{{ $donor->email }}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-3 py-3">
-                                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300">فضي</span>
+                                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full {{ $levelClass }}">{{ $level }}</span>
                                     </td>
-                                    <td class="px-3 py-3 font-bold text-sm text-emerald-600">18,750</td>
-                                    <td class="px-3 py-3 text-center font-medium text-sm">47</td>
-                                    <td class="px-3 py-3 text-xs text-slate-500">منذ ٤ أيام</td>
+                                    <td class="px-3 py-3 font-bold text-sm text-emerald-600">{{ number_format($total) }}</td>
+                                    <td class="px-3 py-3 text-center font-medium text-sm">{{ $donor->donations_count ?? 0 }}</td>
+                                    <td class="px-3 py-3 text-xs text-slate-500">{{ $donor->updated_at->diffForHumans() }}</td>
                                     <td class="px-3 py-3 text-center">
                                         <div class="flex items-center justify-center gap-2">
-                                            <button onclick="viewDonor(this)" class="text-primary hover:text-blue-700"><span class="material-symbols-outlined text-lg">visibility</span></button>
-                                            <button onclick="viewHistory(this)" class="text-emerald-600 hover:text-emerald-700"><span class="material-symbols-outlined text-lg">history</span></button>
+                                            <span class="text-xs text-slate-400">#{{ $donor->id }}</span>
                                         </div>
                                     </td>
                                 </tr>
-
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-3 py-3 text-center">
-                                        <input type="checkbox" class="rounded border-slate-300">
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <div class="size-8 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-                                                <img src="../assets/img/girl.jpg" class="w-full h-full object-cover">
-                                            </div>
-                                            <div class="min-w-0">
-                                                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">سارة أحمد</p>
-                                                <p class="text-xs text-slate-500 truncate">sarah.ahmed@gmail.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-3 py-3">
-                                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300">ذهبي</span>
-                                    </td>
-                                    <td class="px-3 py-3 font-bold text-sm text-emerald-600">42,300</td>
-                                    <td class="px-3 py-3 text-center font-medium text-sm">89</td>
-                                    <td class="px-3 py-3 text-xs text-slate-500">منذ يومين</td>
-                                    <td class="px-3 py-3 text-center">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="viewDonor(this)" class="text-primary hover:text-blue-700"><span class="material-symbols-outlined text-lg">visibility</span></button>
-                                            <button onclick="viewHistory(this)" class="text-emerald-600 hover:text-emerald-700"><span class="material-symbols-outlined text-lg">history</span></button>
-                                        </div>
-                                    </td>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="px-6 py-10 text-center text-slate-400 font-bold">لا يوجد متبرعون بعد</td>
                                 </tr>
-
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-3 py-3 text-center">
-                                        <input type="checkbox" class="rounded border-slate-300">
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <div class="size-8 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-                                                <img src="../assets/img/girl.jpg" class="w-full h-full object-cover">
-                                            </div>
-                                            <div class="min-w-0">
-                                                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">خالد محمود</p>
-                                                <p class="text-xs text-slate-500 truncate">khaled55@hotmail.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-3 py-3">
-                                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">عادي</span>
-                                    </td>
-                                    <td class="px-3 py-3 font-bold text-sm text-emerald-600">4,200</td>
-                                    <td class="px-3 py-3 text-center font-medium text-sm">12</td>
-                                    <td class="px-3 py-3 text-xs text-slate-500">منذ أسبوع</td>
-                                    <td class="px-3 py-3 text-center">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="viewDonor(this)" class="text-primary hover:text-blue-700"><span class="material-symbols-outlined text-lg">visibility</span></button>
-                                            <button onclick="viewHistory(this)" class="text-emerald-600 hover:text-emerald-700"><span class="material-symbols-outlined text-lg">history</span></button>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-3 py-3 text-center">
-                                        <input type="checkbox" class="rounded border-slate-300">
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <div class="size-8 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-                                                <img src="../assets/img/girl.jpg" class="w-full h-full object-cover">
-                                            </div>
-                                            <div class="min-w-0">
-                                                <p class="font-bold text-sm text-slate-900 dark:text-white truncate">فاطمة حسن</p>
-                                                <p class="text-xs text-slate-500 truncate">fatima_h@gmail.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-3 py-3">
-                                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">ماسي</span>
-                                    </td>
-                                    <td class="px-3 py-3 font-bold text-sm text-emerald-600">87,900</td>
-                                    <td class="px-3 py-3 text-center font-medium text-sm">134</td>
-                                    <td class="px-3 py-3 text-xs text-slate-500">منذ ٦ ساعات</td>
-                                    <td class="px-3 py-3 text-center">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="viewDonor(this)" class="text-primary hover:text-blue-700"><span class="material-symbols-outlined text-lg">visibility</span></button>
-                                            <button onclick="viewHistory(this)" class="text-emerald-600 hover:text-emerald-700"><span class="material-symbols-outlined text-lg">history</span></button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

@@ -131,173 +131,63 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @forelse($orders as $order)
+                                @php
+                                    $statusColors = [
+                                        'معلق'   => 'bg-yellow-100 text-yellow-700',
+                                        'مقبول'  => 'bg-emerald-100 text-emerald-700',
+                                        'مكتمل'  => 'bg-blue-100 text-blue-700',
+                                        'مرفوض'  => 'bg-red-100 text-red-700',
+                                    ];
+                                @endphp
                                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                                     <td class="px-6 py-5 text-center">
                                         <input type="checkbox" class="rounded border-slate-300">
                                     </td>
                                     <td class="px-6 py-5">
                                         <div class="flex items-center gap-3">
-                                            <div class="size-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img src="../assets/img/girl.jpg" class="w-full h-full object-cover">
+                                            <div class="size-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <span class="material-symbols-outlined text-primary text-sm">person</span>
                                             </div>
                                             <div>
-                                                <p class="font-bold text-slate-900 dark:text-white">محمد علي</p>
-                                                <p class="text-xs text-slate-500">mohamed@example.com</p>
+                                                <p class="font-bold text-slate-900 dark:text-white">{{ $order->user->name }}</p>
+                                                <p class="text-xs text-slate-500">{{ $order->user->email }}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-5 font-bold text-emerald-600">1,500 ج.م</td>
+                                    <td class="px-6 py-5 font-bold text-emerald-600">{{ number_format($order->amount) }} ج.م</td>
                                     <td class="px-6 py-5">
                                         <div class="max-w-xs">
-                                            <p class="font-medium">ترميم منزل للأسرة محمد - CASE-4789</p>
-                                            <p class="text-xs text-slate-500 truncate">دعم سكن لأسرة متعففة...</p>
+                                            <p class="font-medium">{{ $order->charityCase?->title ?? 'تبرع عام' }}</p>
+                                            <p class="text-xs text-slate-500">#CASE-{{ $order->charity_case_id ?? '—' }}</p>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">منذ ٣ ساعات</td>
+                                    <td class="px-6 py-5 text-sm text-slate-500">{{ $order->created_at->diffForHumans() }}</td>
                                     <td class="px-6 py-5">
-                                        <span
-                                            class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300">معلق</span>
+                                        <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full {{ $statusColors[$order->status] ?? 'bg-slate-100 text-slate-700' }}">{{ $order->status }}</span>
                                     </td>
                                     <td class="px-6 py-5 text-center">
-                                        <div class="flex items-center justify-center gap-3">
-                                            <button onclick="approveOrder(this)"
-                                                class="text-emerald-600 hover:text-emerald-700"><span
-                                                    class="material-symbols-outlined">check_circle</span></button>
-                                            <button onclick="rejectOrder(this)"
-                                                class="text-red-600 hover:text-red-700"><span
-                                                    class="material-symbols-outlined">cancel</span></button>
-                                            <button onclick="viewOrder(this)"
-                                                class="text-primary hover:text-blue-700"><span
-                                                    class="material-symbols-outlined">visibility</span></button>
+                                        <div class="flex items-center justify-center gap-2">
+                                            @if($order->status === 'معلق')
+                                            <form method="POST" action="{{ route('orders.update', $order) }}">
+                                                @csrf @method('PATCH')
+                                                <input type="hidden" name="status" value="مقبول">
+                                                <button type="submit" class="text-emerald-600 hover:text-emerald-700"><span class="material-symbols-outlined">check_circle</span></button>
+                                            </form>
+                                            <form method="POST" action="{{ route('orders.update', $order) }}">
+                                                @csrf @method('PATCH')
+                                                <input type="hidden" name="status" value="مرفوض">
+                                                <button type="submit" class="text-red-600 hover:text-red-700"><span class="material-symbols-outlined">cancel</span></button>
+                                            </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
-
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-6 py-5 text-center">
-                                        <input type="checkbox" class="rounded border-slate-300">
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <div class="flex items-center gap-3">
-                                            <div class="size-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img src="../assets/img/girl.jpg" class="w-full h-full object-cover">
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-slate-900 dark:text-white">سارة أحمد</p>
-                                                <p class="text-xs text-slate-500">sarah.ahmed@gmail.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 font-bold text-emerald-600">500 ج.م</td>
-                                    <td class="px-6 py-5">
-                                        <div class="max-w-xs">
-                                            <p class="font-medium">عملية قلب عاجلة لـ أحمد - CASE-4782</p>
-                                            <p class="text-xs text-slate-500 truncate">حالة طبية عاجلة...</p>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">منذ يومين</td>
-                                    <td class="px-6 py-5">
-                                        <span
-                                            class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300">مقبول</span>
-                                    </td>
-                                    <td class="px-6 py-5 text-center">
-                                        <div class="flex items-center justify-center gap-3">
-                                            <button
-                                                class="text-emerald-600 hover:text-emerald-700 opacity-50 cursor-not-allowed"><span
-                                                    class="material-symbols-outlined">check_circle</span></button>
-                                            <button onclick="rejectOrder(this)"
-                                                class="text-red-600 hover:text-red-700"><span
-                                                    class="material-symbols-outlined">cancel</span></button>
-                                            <button onclick="viewOrder(this)"
-                                                class="text-primary hover:text-blue-700"><span
-                                                    class="material-symbols-outlined">visibility</span></button>
-                                        </div>
-                                    </td>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="px-6 py-10 text-center text-slate-400 font-bold">لا توجد طلبات بعد</td>
                                 </tr>
-
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-6 py-5 text-center">
-                                        <input type="checkbox" class="rounded border-slate-300">
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <div class="flex items-center gap-3">
-                                            <div class="size-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img src="../assets/img/man5.jpg" class="w-full h-full object-cover">
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-slate-900 dark:text-white">خالد محمود</p>
-                                                <p class="text-xs text-slate-500">khaled55@hotmail.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 font-bold text-emerald-600">3,000 ج.م</td>
-                                    <td class="px-6 py-5">
-                                        <div class="max-w-xs">
-                                            <p class="font-medium">توفير كرسي متحرك لأحمد - CASE-4803</p>
-                                            <p class="text-xs text-slate-500 truncate">دعم طبي لذوي الاحتياجات...</p>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">منذ ٥ أيام</td>
-                                    <td class="px-6 py-5">
-                                        <span
-                                            class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">مكتمل</span>
-                                    </td>
-                                    <td class="px-6 py-5 text-center">
-                                        <div class="flex items-center justify-center gap-3">
-                                            <button onclick="approveOrder(this)"
-                                                class="text-emerald-600 hover:text-emerald-700"><span
-                                                    class="material-symbols-outlined">check_circle</span></button>
-                                            <button onclick="rejectOrder(this)"
-                                                class="text-red-600 hover:text-red-700"><span
-                                                    class="material-symbols-outlined">cancel</span></button>
-                                            <button onclick="viewOrder(this)"
-                                                class="text-primary hover:text-blue-700"><span
-                                                    class="material-symbols-outlined">visibility</span></button>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                    <td class="px-6 py-5 text-center">
-                                        <input type="checkbox" class="rounded border-slate-300">
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <div class="flex items-center gap-3">
-                                            <div class="size-10 rounded-full bg-slate-200 overflow-hidden">
-                                                <img src="../assets/img/man6.jpg" class="w-full h-full object-cover">
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-slate-900 dark:text-white">فاطمة حسن</p>
-                                                <p class="text-xs text-slate-500">fatima_h@gmail.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 font-bold text-emerald-600">200 ج.م</td>
-                                    <td class="px-6 py-5">
-                                        <div class="max-w-xs">
-                                            <p class="font-medium">دعم تعليم أطفال - CASE-4791</p>
-                                            <p class="text-xs text-slate-500 truncate">دعم تعليم أطفال...</p>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5 text-sm text-slate-500">منذ أسبوع</td>
-                                    <td class="px-6 py-5">
-                                        <span
-                                            class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300">مرفوض</span>
-                                    </td>
-                                    <td class="px-6 py-5 text-center">
-                                        <div class="flex items-center justify-center gap-3">
-                                            <button
-                                                class="text-emerald-600 hover:text-emerald-700 opacity-50 cursor-not-allowed"><span
-                                                    class="material-symbols-outlined">check_circle</span></button>
-                                            <button
-                                                class="text-red-600 hover:text-red-700 opacity-50 cursor-not-allowed"><span
-                                                    class="material-symbols-outlined">cancel</span></button>
-                                            <button onclick="viewOrder(this)"
-                                                class="text-primary hover:text-blue-700"><span
-                                                    class="material-symbols-outlined">visibility</span></button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

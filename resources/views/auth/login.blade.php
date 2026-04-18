@@ -85,7 +85,7 @@
                                     <input
                                         id="email"
                                         name="email"
-                                        type="email"
+                                        type="text"
                                         value="{{ old('email') }}"
                                         required
                                         autofocus
@@ -95,6 +95,7 @@
                                     >
                                 </div>
                                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-right text-xs font-extrabold text-red-500" />
+                                <p id="emailLiveError" class="hidden mt-2 text-right text-xs font-extrabold text-red-500"></p>
                             </div>
 
                             <div>
@@ -133,6 +134,7 @@
                                     </button>
                                 </div>
                                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-right text-xs font-extrabold text-red-500" />
+                                <p id="passwordLiveError" class="hidden mt-2 text-right text-xs font-extrabold text-red-500"></p>
                             </div>
 
                             <label for="remember_me" class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
@@ -198,6 +200,35 @@
                 passwordField.type = isPassword ? 'text' : 'password';
                 icon.textContent = isPassword ? 'visibility_off' : 'visibility';
             });
+        });
+
+        // Live validation for email
+        document.getElementById('email').addEventListener('input', function () {
+            const val = this.value.trim();
+            const emailPattern = /^[^\s@]+@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/;
+            const errorEl = document.getElementById('emailLiveError');
+            if (val && !emailPattern.test(val)) {
+                errorEl.textContent = 'يرجى إدخال بريد إلكتروني صحيح (مثال: name@gmail.com)';
+                errorEl.classList.remove('hidden');
+                this.classList.add('border-red-400');
+            } else {
+                errorEl.classList.add('hidden');
+                this.classList.remove('border-red-400');
+            }
+        });
+
+        // Live validation for password
+        document.getElementById('password').addEventListener('input', function () {
+            const val = this.value;
+            const errorEl = document.getElementById('passwordLiveError');
+            if (val && !/^\d{8,}$/.test(val)) {
+                errorEl.textContent = 'كلمة المرور يجب أن تكون أرقاماً فقط ولا تقل عن 8 أرقام';
+                errorEl.classList.remove('hidden');
+                this.classList.add('border-red-400');
+            } else {
+                errorEl.classList.add('hidden');
+                this.classList.remove('border-red-400');
+            }
         });
     </script>
 </x-guest-layout>

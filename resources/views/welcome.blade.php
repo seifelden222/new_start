@@ -84,7 +84,7 @@
                 </p>
 
                 <div class="flex flex-wrap gap-4 pt-4 justify-start">
-                    <a href="{{url('donation')}}" class="bg-blue-600/80 hover:bg-blue-600 text-white text-base px-10 py-3.5 rounded-2xl font-black transition-all shadow-lg shadow-blue-900/20 flex items-center gap-2 active:scale-95 group">
+                    <a href="{{ route('login') }}" class="bg-blue-600/80 hover:bg-blue-600 text-white text-base px-10 py-3.5 rounded-2xl font-black transition-all shadow-lg shadow-blue-900/20 flex items-center gap-2 active:scale-95 group">
                         <span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">volunteer_activism</span>
                         ابدأ الآن
                     </a>

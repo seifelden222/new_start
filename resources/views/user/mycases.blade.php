@@ -50,6 +50,7 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+    @php use Illuminate\Support\Facades\Storage; @endphp
     <div class="flex min-h-screen">
 
 
@@ -62,112 +63,48 @@
 
                 <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
                     <h2 class="text-3xl font-black mb-2 text-primary">الحالات التي أتابعها</h2>
-                    <p class="text-slate-500 dark:text-slate-400 mb-8">الحالات التي قمت بدعمها واخترت متابعتها لمعرفة آخر التطورات - ٤ حالات نشطة</p>
+                    <p class="text-slate-500 dark:text-slate-400 mb-8">الحالات التي قمت بدعمها - {{ $cases->count() }} حالة</p>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
+                        @forelse($cases as $case)
                         <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group hover:shadow-md transition-shadow">
                             <div class="h-48 bg-slate-200 overflow-hidden relative">
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="../assets/img/karema.jpg">
-                                <span class="absolute top-3 right-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full font-bold">مستمر</span>
+                                @if($case->image)
+                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="{{ Storage::url($case->image) }}">
+                                @else
+                                    <div class="w-full h-full bg-primary/10 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-primary text-5xl">volunteer_activism</span>
+                                    </div>
+                                @endif
+                                <span class="absolute top-3 right-3 text-white text-xs px-3 py-1 rounded-full font-bold
+                                    {{ $case->status === 'مكتملة' ? 'bg-emerald-500' : ($case->status === 'عاجلة' ? 'bg-red-500' : 'bg-amber-500') }}">
+                                    {{ $case->status }}
+                                </span>
                             </div>
                             <div class="p-5">
-                                <h4 class="font-black text-base mb-2">توفير مسكن لعائلة مكونة من ٥ أفراد - غزة</h4>
-                                <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">متابعة حالة العائلة بعد الحريق الذي أفقدهم منزلهم، يتم تحديث الحالة أسبوعياً.</p>
+                                <h4 class="font-black text-base mb-2">{{ $case->title }}</h4>
+                                <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">{{ $case->description }}</p>
                                 <div class="space-y-3 mb-4">
                                     <div class="flex justify-between text-sm">
                                         <span class="text-slate-500">تم جمع</span>
-                                        <span class="font-bold">4,200 جنيه مصري</span>
+                                        <span class="font-bold">{{ number_format($case->collected_amount) }} جنيه</span>
                                     </div>
                                     <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                                        <div class="bg-primary h-full rounded-full" style="width: 42%"></div>
+                                        <div class="bg-primary h-full rounded-full" style="width: {{ $case->progressPercent() }}%"></div>
                                     </div>
                                     <div class="flex justify-between text-xs text-slate-500">
-                                        <span>الهدف: 10,000 جنيه</span>
-                                        <span>٤٢%</span>
+                                        <span>الهدف: {{ number_format($case->target_amount) }} جنيه</span>
+                                        <span>{{ $case->progressPercent() }}%</span>
                                     </div>
                                 </div>
-                                <button onclick="viewCaseDetails('توفير مسكن لعائلة مكونة من ٥ أفراد - غزة', '4,200', '10,000', '42')" class="w-full bg-primary/10 text-primary py-2.5 rounded-lg text-sm font-bold hover:bg-primary/20 transition-colors">
-                                    متابعة التطورات
-                                </button>
                             </div>
                         </div>
-
-                        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group hover:shadow-md transition-shadow">
-                            <div class="h-48 bg-slate-200 overflow-hidden relative">
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="../assets/img/baby.jpg">
-                                <span class="absolute top-3 right-3 bg-emerald-500 text-white text-xs px-3 py-1 rounded-full font-bold">اكتمل تقريباً</span>
-                            </div>
-                            <div class="p-5">
-                                <h4 class="font-black text-base mb-2">عملية جراحية للطفل سليم - استعادة البصر</h4>
-                                <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">تم جمع معظم المبلغ المطلوب، سيتم إجراء العملية خلال الأسابيع القادمة.</p>
-                                <div class="space-y-3 mb-4">
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-slate-500">تم جمع</span>
-                                        <span class="font-bold">7,500 جنيه مصري</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                                        <div class="bg-emerald-500 h-full rounded-full" style="width: 88%"></div>
-                                    </div>
-                                    <div class="flex justify-between text-xs text-slate-500">
-                                        <span>الهدف: 8,500 جنيه</span>
-                                        <span>٨٨%</span>
-                                    </div>
-                                </div>
-                                <button onclick="viewCaseDetails('عملية جراحية للطفل سليم - استعادة البصر', '7,500', '8,500', '88')" class="w-full bg-emerald-500/10 text-emerald-600 py-2.5 rounded-lg text-sm font-bold hover:bg-emerald-500/20 transition-colors">
-                                    عرض آخر التحديثات
-                                </button>
-                            </div>
+                        @empty
+                        <div class="col-span-3 text-center py-16 text-slate-400">
+                            <span class="material-symbols-outlined text-5xl mb-4 block">volunteer_activism</span>
+                            <p class="font-bold">لم تتبرع لأي حالة بعد</p>
                         </div>
-
-                        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group hover:shadow-md transition-shadow">
-                            <div class="h-48 bg-slate-200 overflow-hidden relative">
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="../assets/img/man.jpg">
-                                <span class="absolute top-3 right-3 bg-amber-500 text-white text-xs px-3 py-1 rounded-full font-bold">مستمر</span>
-                            </div>
-                            <div class="p-5">
-                                <h4 class="font-black text-base mb-2">عائلة أم محمد - دعم غذائي شهري</h4>
-                                <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">برنامج دعم مستمر للعائلة، يتم تجديد التبرع الشهري تلقائياً.</p>
-                                <div class="space-y-3 mb-4">
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-slate-500">آخر تبرع</span>
-                                        <span class="font-bold">50 جنيه مصري</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-slate-500">تاريخ آخر تحديث</span>
-                                        <span class="font-bold">قبل يومين</span>
-                                    </div>
-                                </div>
-                                <button onclick="viewCaseDetails('عائلة أم محمد - دعم غذائي شهري', '50', 'مستمر', 'شهري')" class="w-full bg-amber-500/10 text-amber-600 py-2.5 rounded-lg text-sm font-bold hover:bg-amber-500/20 transition-colors">
-                                    متابعة الحالة
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group hover:shadow-md transition-shadow">
-                            <div class="h-48 bg-slate-200 overflow-hidden relative">
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="../assets/img/Poor-family.jpg">
-                                <span class="absolute top-3 right-3 bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-bold">طويل الأمد</span>
-                            </div>
-                            <div class="p-5">
-                                <h4 class="font-black text-base mb-2">كبار السن - حي البساتين</h4>
-                                <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">مشروع دعم مستمر لعدد من كبار السن في الحي، يشمل أدوية ومساعدات غذائية.</p>
-                                <div class="space-y-3 mb-4">
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-slate-500">عدد المستفيدين</span>
-                                        <span class="font-bold">١٤ شخص</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-slate-500">آخر تحديث</span>
-                                        <span class="font-bold">منذ ١٠ أيام</span>
-                                    </div>
-                                </div>
-                                <button onclick="viewCaseDetails('كبار السن - حي البساتين', '14 شخص', 'طويل الأمد', 'منذ ١٠ أيام')" class="w-full bg-blue-500/10 text-blue-600 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-500/20 transition-colors">
-                                    عرض التفاصيل
-                                </button>
-                            </div>
-                        </div>
-
+                        @endforelse
                     </div>
 
 
