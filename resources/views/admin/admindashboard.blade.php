@@ -8,8 +8,12 @@
     <title>نظرة عامة - بداية جديدة</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Public+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -66,32 +70,39 @@
 
                 <!-- Stats Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-2">إجمالي المستخدمين</p>
-                        <h4 class="text-3xl font-black text-slate-800 dark:text-white">{{ number_format($totalUsers) }}</h4>
+                        <h4 class="text-3xl font-black text-slate-800 dark:text-white">{{ number_format($totalUsers) }}
+                        </h4>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-2">الحالات النشطة</p>
                         <h4 class="text-3xl font-black text-primary">{{ $activeCases }}</h4>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-2">إجمالي التبرعات</p>
                         <h4 class="text-3xl font-black text-emerald-600">{{ number_format($totalDonations) }} ج.م</h4>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-2">طلبات معلقة</p>
                         <h4 class="text-3xl font-black text-amber-600">{{ $pendingOrders }}</h4>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-6">احصائيات التبرعات الشهرية</h3>
                         <div style="position: relative; height: 300px; width: 100%;">
                             <canvas id="donationChart"></canvas>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-6">توزيع الحالات</h3>
                         <div style="position: relative; height: 300px; width: 100%;">
                             <canvas id="caseChart"></canvas>
@@ -104,8 +115,10 @@
     </div>
 
     <!-- Notifications Popup -->
-    <div id="notificationsPopup" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20" onclick="closeNotifications(event)">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md mx-4" onclick="event.stopPropagation()">
+    <div id="notificationsPopup" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20"
+        onclick="closeNotifications(event)">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md mx-4"
+            onclick="event.stopPropagation()">
             <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">الإشعارات</h3>
                 <button onclick="closeNotifications()" class="text-slate-400 hover:text-slate-600">
@@ -114,32 +127,38 @@
             </div>
             <div class="p-4 max-h-96 overflow-y-auto">
                 <div class="space-y-3">
-                    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors cursor-pointer">
+                    <div
+                        class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors cursor-pointer">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-blue-600">volunteer_activism</span>
                             <div class="flex-1">
                                 <p class="font-bold text-sm text-slate-900 dark:text-white">تبرع جديد</p>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">تم استلام تبرع بقيمة 500 ج.م من محمد علي</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">تم استلام تبرع بقيمة 500 ج.م
+                                    من محمد علي</p>
                                 <p class="text-xs text-slate-400 mt-2">منذ 5 دقائق</p>
                             </div>
                         </div>
                     </div>
-                    <div class="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors cursor-pointer">
+                    <div
+                        class="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors cursor-pointer">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-emerald-600">check_circle</span>
                             <div class="flex-1">
                                 <p class="font-bold text-sm text-slate-900 dark:text-white">حالة مكتملة</p>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">تم إكمال حالة "عملية قلب للطفل يوسف"</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">تم إكمال حالة "عملية قلب
+                                    للطفل يوسف"</p>
                                 <p class="text-xs text-slate-400 mt-2">منذ ساعة</p>
                             </div>
                         </div>
                     </div>
-                    <div class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors cursor-pointer">
+                    <div
+                        class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors cursor-pointer">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-amber-600">warning</span>
                             <div class="flex-1">
                                 <p class="font-bold text-sm text-slate-900 dark:text-white">حالة عاجلة</p>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">حالة جديدة تحتاج إلى اهتمام فوري</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">حالة جديدة تحتاج إلى اهتمام
+                                    فوري</p>
                                 <p class="text-xs text-slate-400 mt-2">منذ 3 ساعات</p>
                             </div>
                         </div>
@@ -155,8 +174,10 @@
     </div>
 
     <!-- Settings Popup -->
-    <div id="settingsPopup" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20" onclick="closeSettings(event)">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md mx-4" onclick="event.stopPropagation()">
+    <div id="settingsPopup" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20"
+        onclick="closeSettings(event)">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md mx-4"
+            onclick="event.stopPropagation()">
             <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">الإعدادات</h3>
                 <button onclick="closeSettings()" class="text-slate-400 hover:text-slate-600">
@@ -185,12 +206,15 @@
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" class="sr-only peer" onchange="toggleDarkMode()">
-                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            <div
+                                class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                            </div>
                         </label>
                     </div>
                     <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
                         <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+                            <span
+                                class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
                             <div>
                                 <p class="font-bold text-sm text-slate-900 dark:text-white">الإشعارات</p>
                                 <p class="text-xs text-slate-500">إدارة تفضيلات الإشعارات</p>
@@ -208,7 +232,8 @@
                         </div>
                         <span class="material-symbols-outlined text-slate-400">arrow_back_ios</span>
                     </div>
-                    <button onclick="logout()" class="w-full flex items-center justify-center gap-3 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
+                    <button onclick="logout()"
+                        class="w-full flex items-center justify-center gap-3 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
                         <span class="material-symbols-outlined">logout</span>
                         <span class="font-bold text-sm">تسجيل الخروج</span>
                     </button>
@@ -274,15 +299,15 @@
 
         // Quick actions
         function quickAddCase() {
-            window.location.href = '{{ route("addcase") }}';
+            window.location.href = '{{ route('addcase') }}';
         }
 
         function quickViewReports() {
-            window.location.href = '{{ route("reports") }}';
+            window.location.href = '{{ route('reports') }}';
         }
 
         function quickManageDonors() {
-            window.location.href = '{{ route("donors") }}';
+            window.location.href = '{{ route('donors') }}';
         }
 
         window.onload = function() {
@@ -304,10 +329,22 @@
                 },
                 options: {
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
                     scales: {
-                        y: { grid: { color: 'rgba(0,0,0,0.05)' } },
-                        x: { grid: { display: false } }
+                        y: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
                     }
                 }
             });
@@ -328,7 +365,12 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { padding: 15, font: { size: 12 } }
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
                         }
                     }
                 }
